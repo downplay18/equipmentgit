@@ -32,47 +32,25 @@ if (!isset($_SESSION['user_id'])) {
         print_r($_POST);
         ?>
 
-        <!-- Main container -->
-        <div class="container-fluid">
-
-            <!-- breadcrumb -->
-            <ol class="breadcrumb">
-                <li class="active"><span class="glyphicon glyphicon-home"></span> หน้าแรก</li>
-            </ol> <!-- /breadcrumb -->    
-
-            <div class="row">
-                <div class="col-md-2 sidebar">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item active" align="center"><span class="glyphicon glyphicon-home"></span> หน้าหลัก</a>
-                        <a href="<?= $root_url ?>/show.php" class="list-group-item"><span class="glyphicon glyphicon-search"></span> สืบค้น<span class="badge">999 items</span></a>
-                        <a href="<?= $root_url ?>/add.php" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> เพิ่มใบสั่งซื้อ(แบบปกติ)</a>
-                        <a href="<?= $root_url ?>/add_urgent.php" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> เพิ่มใบสั่งซื้อ(แบบเร่งด่วน)</a>
-                        <a href="<?= $root_url ?>/take.php" class="list-group-item"><span class="glyphicon glyphicon-minus-sign"></span> เบิกใช้งาน</a>
-                    </div>   
-
-                </div>
-
-
-                <div class="col-md-10" style="padding: 80px">
-                    <div class="container-fluid">
-                        
-                        <div class="col-md-4 col-md-offset-4">
-                            <div class="alert alert-info">
-                                รายการสนใจพิเศษ
-                            </div>
-                        </div>
-                        
-                    </div> <!-- /.container-fluid -->
-                </div> <!-- /.col-md-10 -->
-
-
+        <div class="row">
+            <div class="col-md-2 sidebar">
+                <?php include 'sidebar.php'; ?>
             </div>
 
 
+            <div class="col-md-10" style="padding: 80px">
+                <div class="container-fluid">
 
+                    <div class="col-md-4 col-md-offset-4">
+                        <div class="alert alert-info">
+                            รายการสนใจพิเศษ
+                        </div>
+                    </div>
 
-        </div> <!-- /.container-fluid -->
+                </div> <!-- /.container-fluid -->
+            </div> <!-- /.col-md-10 -->
 
+        </div> <!-- /.row -->
 
 
 
