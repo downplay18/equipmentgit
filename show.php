@@ -1,6 +1,8 @@
 <?php
 //var_dump($_SESSION);
 session_start();
+require_once 'connection.php';
+
 include 'root_url.php';
 if ($_SESSION['user_id'] == "") {
     header("Location: $root_url/index.php", true, 302);
@@ -21,7 +23,7 @@ if ($_SESSION['user_id'] == "") {
         <?php
         /* navbar */
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
-        require("navbar_authen.php");
+        include 'navbar.php';
 
 
         echo '<br/>';
@@ -35,12 +37,6 @@ if ($_SESSION['user_id'] == "") {
 
         <!-- Main container -->
         <div class="container-fluid">
-
-            <!-- breadcrumb -->
-            <ol class="breadcrumb">
-                <li><a href="index.php"><span class="glyphicon glyphicon-home"></span> หน้าแรก</a></li>
-                <li class="active">สืบค้น</li>
-            </ol> <!-- /breadcrumb -->    
 
             <div class="page-header">
                 <h2>สืบค้น</h2>

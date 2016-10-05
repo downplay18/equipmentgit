@@ -30,45 +30,37 @@ include("root_url.php");
                         <li role="separator" class="divider"></li>
                         <li><a href="mmtc.egat.co.th" target="_blank">MMTC Home Page</a></li>
                         <li><a href="http://10.249.50.18/stock/" target="_blank">เว็บครุภัณฑ์</a></li>
-
+                        
                     </ul>
                 </li>
 
                 <li><a href="#">คู่มือ</a></li>
             </ul> 
 
-            <?php
-            /* ใช้แสดงชื่อผู้ล็อกอิน */ /* `user_id`,`password`,`nname` */
-            include 'connection.php';
-            $strSQL = "SELECT * FROM user WHERE user_id = '" . $_SESSION['user_id'] . "' ";
-            $objQuery = mysqli_query($connection, $strSQL) or die("Error: " . mysqli_error($connection));
-            $loginResult = mysqli_fetch_array($objQuery); /* ไม่ได้ SELECT Status เพราะ ใช้ค่าจาก $_SESSION */
-            ?>
+            <!-- Sign In form
+            <form class="navbar-form navbar-right" action="_login_check.php" method="post" role="form" target="">
 
-            <div class="navbar-form navbar-left">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input type="text" class="form-control" name="login_cid" placeholder="เลขพนักงาน" autocomplete="on" 
+                           maxlength="6" size="6" pattern="[0-9]+" title="ตัวเลข 6 ตัว เท่านั้น!">                                        
+                </div>
 
-            </div>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input type="password" class="form-control" name="login_pwd" placeholder="รหัสผ่าน"
+                           maxlength="50" size="8">                                        
+                </div>
 
-            <!-- ปุ่มสำหรับ user -->
-            <div class="btn-group navbar-right">
-
-                <!-- Sign Out กลับไปหน้า Index -->
-                <a class="btn btn-default navbar-btn" href="_logout.php" role="button">
-                    <span class="glyphicon glyphicon-log-out"></span>&nbsp;ออกจากระบบ
-                </a>
-
-            </div><!-- /ปุ่มสำหรับ user -->
-
-            <!-- แสดงชื่อผู้ใช้งาน -->
-            <p class="navbar-text navbar-right">
-                <?php
-                if (empty($loginResult['division'])) {
-                    echo "ยังไม่ระบุสังกัด";
-                } else {
-                    echo $loginResult['division'];
-                }
-                ?> 
-                <a href="_login_update.php" target="" class="navbar-link"><?= "[" . $loginResult["user_id"] . "] " . $loginResult["name"] . "</a> (" . $_SESSION["status"] . ") &nbsp;" ?></p>
+                <div class="form-group">
+                    <button name="submit" type="submit" value="login" class="btn btn-default">
+                        <span class="glyphicon glyphicon-log-in"></span>&nbsp;เข้าสู่ระบบ
+                    </button>
+                </div> 
+                
+                
+                
+            </form>  /Sign In form -->
 
         </div>
     </div>

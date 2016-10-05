@@ -1,18 +1,13 @@
 <?php
 //var_dump($_SESSION);
 session_start();
+require_once 'connection.php';
+
+include 'root_url.php';
 if (!isset($_SESSION['user_id'])) {
-    echo "<br/>โปรดล็อกอินก่อน!";
-    header('Location: http://localhost:81/equipment/index.php', true, 302);
+    header("Location: $root_url/index.php", true, 302);
     exit();
 }
-  /*
-  if ($_SESSION['status'] != "USER") {
-  echo "<br/>สำหรับ -พนักงาน- เท่านั้น!";
-  exit(); 
-  } */
-
-require 'connection.php';
 ?>
 
 <html>
@@ -26,22 +21,15 @@ require 'connection.php';
 
     <body>
         <?php
-        /* navbar */
+        include("navbar.php");
 
-        if (!isset($_SESSION['user_id'])) {
-            include("navbar_unauthen.php");
-        } else {
-            include("navbar_authen.php");
-        }
-
-        
-          echo '<br/>';
-          echo 'SESSION = ';
-          print_r($_SESSION);
-          echo '<br/>loginResult =<br/>';
-          print_r($loginResult);
-          echo '<br/>POST = <br/>';
-          print_r($_POST); 
+        echo '<br/>';
+        echo 'SESSION = ';
+        print_r($_SESSION);
+        echo '<br/>loginResult =<br/>';
+        print_r($loginResult);
+        echo '<br/>POST = <br/>';
+        print_r($_POST);
         ?>
 
         <!-- Main container -->
@@ -52,31 +40,33 @@ require 'connection.php';
                 <li class="active"><span class="glyphicon glyphicon-home"></span> หน้าแรก</li>
             </ol> <!-- /breadcrumb -->    
 
-            <!-- function container -->
             <div class="row">
+                <div class="col-md-2 sidebar">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active" align="center"><span class="glyphicon glyphicon-home"></span> หน้าหลัก</a>
+                        <a href="<?= $root_url ?>/show.php" class="list-group-item"><span class="glyphicon glyphicon-search"></span> สืบค้น<span class="badge">999 items</span></a>
+                        <a href="<?= $root_url ?>/add.php" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> เพิ่มใบสั่งซื้อ(แบบปกติ)</a>
+                        <a href="<?= $root_url ?>/add_urgent.php" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> เพิ่มใบสั่งซื้อ(แบบเร่งด่วน)</a>
+                        <a href="<?= $root_url ?>/take.php" class="list-group-item"><span class="glyphicon glyphicon-minus-sign"></span> เบิกใช้งาน</a>
+                    </div>   
 
-                <div class="col-md-3"></div>
-                <div class="col-md-6" align="center">
-                    <?php if($_SESSION['status'] == 'KEY' || $_SESSION['status'] == 'ADMIN') { ?>
-                    <a class="btn btn-success" href="add.php" target="_blank"><span class="glyphicon glyphicon-plus-sign"></span> เพิ่มใบสั่งซื้อ(ปกติ)</a>
-                    <a class="btn btn-success" href="add_urgent.php" target="_blank"><span class="glyphicon glyphicon-plus-sign"></span> เพิ่มใบสั่งซื้อ(เร่งด่วน)</a>
-                    <?php } ?>
-                    <a class="btn btn-warning" href="take.php" target="_blank"><span class="glyphicon glyphicon-minus-sign"></span> เบิกใช้งาน</a>
-                    <a class="btn btn-info" href="show.php" target="_blank"><span class="glyphicon glyphicon-search"></span> สืบค้น</a>
                 </div>
-                <div class="col-md-3"></div>
-                
-                <div class="col-md-12" style="padding: 100px">
-                    <div class="col-md-4"></div>
-                    <div class="col-md-4 alert alert-info" align="center">
-                        <br/>มีข้อขัดข้อง ติดต่อผู้ดูแลระบบ
-                        <br/>XXXXXXXX
-                        <br/>
-                        <br/>
-                    </div>
-                    <div class="col-md-4"></div>
-                </div>
-            </div><!--/.row -->
+
+
+                <div class="col-md-10" style="padding: 80px">
+                    <div class="container-fluid">
+                        
+                        <div class="col-md-4 col-md-offset-4">
+                            <div class="alert alert-info">
+                                รายการสนใจพิเศษ
+                            </div>
+                        </div>
+                        
+                    </div> <!-- /.container-fluid -->
+                </div> <!-- /.col-md-10 -->
+
+
+            </div>
 
 
 

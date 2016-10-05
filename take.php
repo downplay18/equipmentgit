@@ -1,15 +1,13 @@
 <?php
+//var_dump($_SESSION);
 session_start();
+require_once 'connection.php';
+
+include 'root_url.php';
 if ($_SESSION['user_id'] == "") {
-    echo "<br/>โปรดยืนยันตัวตนก่อน !";
+    header("Location: $root_url/index.php", true, 302);
     exit();
 }
-
-/* ผู้เพิ่มรายการเท่านั้นถึงเข้าหน้านี้ได้ 
-  if ($_SESSION['name'] != $_SESSION['adder']) {
-  echo "<br/>สำหรับ -พนักงาน- เท่านั้น!";
-  exit();
-  } */
 ?>
 
 <html>
