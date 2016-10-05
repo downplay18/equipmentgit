@@ -20,14 +20,14 @@ if (!isset($_SESSION['user_id'])) {
 
         <?php
         include("navbar.php");
-        /*
-          echo "FROM _login_update.php<br/>";
-          echo "dump POST = ";
-          var_dump($_POST);
-          echo "<br/>dump SESSION = <br/>";
-          var_dump($_SESSION);
-          echo '<br/>LoginResult = <br/>';
-          print_r($loginResult); */
+
+        echo '<br/>';
+        echo 'SESSION = ';
+        print_r($_SESSION);
+        echo '<br/>loginResult =<br/>';
+        print_r($loginResult);
+        echo '<br/>POST = <br/>';
+        print_r($_POST);
         ?>
 
         <div class="row">
@@ -74,6 +74,7 @@ if (!isset($_SESSION['user_id'])) {
                                 <div class="col-md-6">
 
                                     <select class="form-control" name="lupdate_div">
+                                        <option></option>
                                         <?php
                                         $divQS = "SELECT `listDivision` FROM `list_division`";
                                         $divQry = mysqli_query($connection, $divQS);

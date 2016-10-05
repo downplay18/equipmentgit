@@ -17,12 +17,12 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <!--ปุ่ม HOME -->
-                <li class="active"><a href="index.php"><span class="glyphicon glyphicon-knight"></span> &nbsp;ระบบเครื่องมือเครื่องใช้และวัสดุสิ้นเปลือง</a></li>
+                <li class="active"><a href="<?= $root_url ?>/_login_check.php"><span class="glyphicon glyphicon-knight"></span> &nbsp;ระบบเครื่องมือเครื่องใช้และวัสดุสิ้นเปลือง</a></li>
 
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">ลิงค์ที่เกี่ยวข้อง<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="<?= $root_url . '/static_userList.php' ?>" target="_blank">รายชื่อพนักงาน</a></li>
+                        <li><a href="<?= $root_url ?>/static_userList.php" target="_blank">รายชื่อพนักงาน</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="mmtc.egat.co.th" target="_blank">MMTC Home Page</a></li>
                         <li><a href="http://10.249.50.18/stock/" target="_blank">เว็บครุภัณฑ์</a></li>

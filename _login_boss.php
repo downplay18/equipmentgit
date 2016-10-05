@@ -1,19 +1,15 @@
 <?php
 //var_dump($_SESSION);
 session_start();
+require_once 'connection.php';
+
+include 'root_url.php';
 if (!isset($_SESSION['user_id'])) {
-    echo "<br/>โปรดล็อกอินก่อน!";
-    header('Location: http://localhost:81/equipment1php/index.php', true, 302);
+    header("Location: $root_url/index.php", true, 302);
     exit();
 }
-/*
-  if ($_SESSION['status'] != "USER") {
-  echo "<br/>สำหรับ -พนักงาน- เท่านั้น!";
-  exit();
-  } */
-
-require 'connection.php';
 ?>
+
 
 <html>
     <head>
@@ -26,13 +22,7 @@ require 'connection.php';
 
     <body>
         <?php
-        /* navbar */
-
-        if (!isset($_SESSION['user_id'])) {
-            include("navbar_unauthen.php");
-        } else {
-            include("navbar_authen.php");
-        }
+        include("navbar.php");
 
         /*
           echo '<br/>';
@@ -47,27 +37,28 @@ require 'connection.php';
         <!-- Main container -->
         <div class="container-fluid">
 
-            <!-- breadcrumb -->
-            <ol class="breadcrumb">
-                <li><a href="index.php"><span class="glyphicon glyphicon-home"></span> หน้าแรก</a></li>
-                <li class="active">รายการหลัก</li>
-            </ol> <!-- /breadcrumb -->    
 
 
 
-
-
-            <?php include 'root_url.php'; ?>
 
             <!--
             <h3 class="page-header">ระบบเครื่องมือเครื่องใช้และวัสดุสิ้นเปลือง <small>กองพัฒนาด้านเทคโนโลยีโรงไฟฟ้าถ่านหินและเหมือง (กพทถ-ห.)</small></h3>
             -->
 
             <div class="row">
+                <div class="col-md-2 sidebar">
+                    <?php include 'sidebar.php'; ?>
+                </div>
 
-                รายการรออนุมัติ
+                <div class="col-md-10">
+                    <!-- MAIN CONTAINER, EDIT BOX COLUMN -->
+                    <div class="container">
 
-            </div>
+                        
+
+                    </div> <!-- /MAIN CONTAINER -->
+                </div> <!--col-md-10-->
+            </div> <!-- /.row -->
 
 
 

@@ -35,55 +35,64 @@ if ($_SESSION['user_id'] == "") {
         print_r($_POST);
         ?>
 
-        <!-- Main container -->
-        <div class="container-fluid">
+        <div class="row">
 
-            <div class="page-header">
-                <h2>สืบค้น</h2>
+            <div class="col-md-2 sidebar">
+                <?php include 'sidebar.php'; ?>
             </div>
 
+            <div class="col-md-10">
 
-            <?php require("connection.php"); ?>
-            <div class="row">
+                <!-- Main container -->
+                <div class="container-fluid">
 
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="selDiv">ค้นหาโดยกลุ่มงาน</label>
-                        <select class="form-control" id="selDiv">
-                            <?php
-                            //เรียก list ของกลุ่มงานทั้งหมดออกมา
-                            $divQS = "SELECT `division` FROM `user` GROUP BY `division`";
-                            $divQry = mysqli_query($connection, $divQS);
-                            while ($rowDiv = mysqli_fetch_assoc($divQry)) {
-                                ?>
-                                <option><?php echo $rowDiv['division'] ?></option>
-                            <?php } ?>
-                        </select>
+                    <div class="page-header">
+                        <h2>สืบค้น <small>ระบบสืบค้นและพิมพ์รายงาน</small></h2>
                     </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="form-group">
-                        <label for="selSite">ค้นหาโดยสถานที่ใช้งาน</label>
-                        <select class="form-control" id="selSite">
-                            <?php
-                            //เรียก list ของกลุ่มงานทั้งหมดออกมา
-                            $siteQS = "SELECT `division` FROM `user` GROUP BY `division`";
-                            $siteQry = mysqli_query($connection, $siteQS);
-                            while ($rowSite = mysqli_fetch_assoc($siteQry)) {
-                                ?>
-                                <option><?php echo $rowSite['division'] ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </div>
 
 
+                    <?php require("connection.php"); ?>
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="selDiv">ค้นหาโดยกลุ่มงาน</label>
+                                <select class="form-control" id="selDiv">
+                                    <option>-- เลือกกลุ่มงาน --</option>
+                                    <?php
+                                    //เรียก list ของกลุ่มงานทั้งหมดออกมา
+                                    $divQS = "SELECT `listDivision` FROM `list_division`";
+                                    $divQry = mysqli_query($connection, $divQS);
+                                    while ($rowDiv = mysqli_fetch_assoc($divQry)) {
+                                        ?>
+                                        <option><?php echo $rowDiv['listDivision'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="selSite">ค้นหาโดยสถานที่ใช้งาน</label>
+                                <select class="form-control" id="selSite">
+                                    <option>-- เลือกสถานที่ --</option>
+                                    <?php
+                                    //เรียก list ของกลุ่มงานทั้งหมดออกมา
+                                    $siteQS = "SELECT `listBuilding` FROM `list_building`";
+                                    $siteQry = mysqli_query($connection, $siteQS);
+                                    while ($rowSite = mysqli_fetch_assoc($siteQry)) {
+                                        ?>
+                                        <option><?php echo $rowSite['listBuilding'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
 
 
-            </div><!-- Main container -->
+                    </div><!-- Main container -->
+                </div> <!-- /.col-md-10 -->
 
-
+            </div> <!-- /.row -->
 
 
 
