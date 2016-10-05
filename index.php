@@ -1,13 +1,6 @@
 <?php
 //var_dump($_SESSION);
 session_start();
-require_once 'connection.php';
-
-include 'root_url.php';
-if ($_SESSION['user_id'] == "") {
-    header("Location: $root_url/index.php", true, 302);
-    exit();
-}
 ?>
 
 <html>
