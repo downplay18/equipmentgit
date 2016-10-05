@@ -1,6 +1,13 @@
 <?php
 //var_dump($_SESSION);
 session_start();
+require_once 'connection.php';
+
+include 'root_url.php';
+
+if($_SESSION['user_id']!=""){
+    header("Location: $root_url/_login_check.php", true, 302);
+}
 ?>
 
 <html>
@@ -13,14 +20,14 @@ session_start();
 
         <?php
         include("navbar.php");
-        /*
+        
           echo '<br/>';
           echo 'SESSION = ';
           print_r($_SESSION);
           //echo '<br/>loginResult =<br/>';
           //print_r($loginResult);
           echo '<br/>POST = <br/>';
-          print_r($_POST); */
+          print_r($_POST); 
         ?>
 
         <div class="row">
