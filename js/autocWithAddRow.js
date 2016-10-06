@@ -27,7 +27,7 @@ $(".addmore").on('click', function () {
     $('#varDetail_' + i).autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: 'ajax.php',
+                url: 'add_autoc_ajax.php',
                 dataType: "json",
                 method: 'post',
                 data: {
@@ -80,7 +80,7 @@ function check() {
 $('#varDetail_1').autocomplete({
     source: function (request, response) {
         $.ajax({
-            url: 'ajax.php',
+            url: 'autoc_ajax.php',
             dataType: "json",
             method: 'post',
             data: {

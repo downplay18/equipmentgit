@@ -8,7 +8,7 @@
 $('#varDetail_1').autocomplete({
     source: function (request, response) {
         $.ajax({
-            url: 'ajax.php',
+            url: 'take_autoc_ajax.php',
             dataType: "json",
             method: 'post',
             data: {
