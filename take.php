@@ -52,7 +52,7 @@ if ($_SESSION['user_id'] == "") {
                                 ผู้ลงบันทึกเบิก: <?= $_SESSION['name'] ?>
                             </div>
                             <div class="col-md-6">
-                                <div class="col-md-4">แจ้งเพื่อทราบ: </div>
+                                <div class="col-md-4" align="right">แจ้งเพื่อทราบ: </div>
                                 <div class="col-md-8">
                                     <select class="form-control">
                                         <option>-- เลือกผู้รับทราบ --</option>
