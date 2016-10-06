@@ -46,99 +46,73 @@ if ($_SESSION['user_id'] == "") {
                     </div>
 
                     <form id="takeForm" action="take_process.php" method="post">
-                        <div class="col-md-8">
 
-                            <div class="col-md-6" align="center">
-                                ผู้ลงบันทึกเบิก: <?= $_SESSION['name'] ?>
+                        <div class="col-md-6" align="center">
+                            ผู้ลงบันทึกเบิก: <?= $_SESSION['name'] ?>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-4" align="right">แจ้งเพื่อทราบ: </div>
+                            <div class="col-md-8">
+                                <select class="form-control">
+                                    <option>-- เลือกผู้รับทราบ --</option>
+                                    <?php
+                                    $knownQS = "SELECT `name`,`division` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "'";
+                                    $knownQry = mysqli_query($connection, $knownQS);
+                                    while ($rowKnown = mysqli_fetch_assoc($knownQry)) {
+                                        ?>
+                                        <option><?php echo $rowKnown['name'] ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4" align="right">แจ้งเพื่อทราบ: </div>
-                                <div class="col-md-8">
-                                    <select class="form-control">
-                                        <option>-- เลือกผู้รับทราบ --</option>
-                                        <?php
-                                        $knownQS = "SELECT `name`,`division` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "'";
-                                        $knownQry = mysqli_query($connection, $knownQS);
-                                        while ($rowKnown = mysqli_fetch_assoc($knownQry)) {
-                                            ?>
-                                            <option><?php echo $rowKnown['name'] ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div>
-                                <br/><br/>
-                            </div>
+                            <br/><br/>
+                        </div>
 
-                            <table class="table table-bordered">
-                                <col width="60%"> <!-- detail -->
-                                <col width="10%"> <!-- qty --> 
-                                <col width="10%"> <!-- slipSuffix -->
-                                <col width="20%"> <!-- worker -->
-                                <tr bgcolor="#ffd1b3">
-                                    <th>รายการ</th>
-                                    <th>เบิกจำนวน</th>
-                                    <th>หน่วย</th>    
-                                    <th>ผู้นำไปใช้</th>      
-                                </tr>
+                        <table class="table table-bordered">
+                            <col width="60%"> <!-- detail -->
+                            <col width="10%"> <!-- qty --> 
+                            <col width="10%"> <!-- slipSuffix -->
+                            <col width="20%"> <!-- worker -->
+                            <tr bgcolor="#ffd1b3">
+                                <th>รายการ</th>
+                                <th>เบิกจำนวน</th>
+                                <th>หน่วย</th>    
+                                <th>ผู้นำไปใช้</th>      
+                            </tr>
 
-                                <tr>
-                                    <td><input class="form-control" type='text' id='varDetail_1' name='varDetail[]'/></td>
-                                    <td><input class="form-control" type='number' id='var_quantity_1' name='var_quantity[]' required/> </td>
-                                    <td><input class="form-control" type='text' id='var_suffix_1' name='var_suffix[]' required readonly/> </td>
+                            <tr>
+                                <td><input class="form-control" type='text' name=''/></td>
+                                <td><input class="form-control" type='number' name='' required/> </td>
+                                <td><input class="form-control" type='text' name='' required/> </td>
 
 
 
-                                    <td>
+                                <td>
+                                    <div class="form-group">
+                                        <select class="form-control">
+                                            <?php
+                                            //เรียก list ของกลุ่มงานทั้งหมดออกมา
+                                            $workerQS = "SELECT `wname` FROM `worker` GROUP BY `wname`";
+                                            $workerQry = mysqli_query($connection, $workerQS);
+                                            while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
+                                                ?>
+                                                <option><?php echo $rowWorker['wname'] ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </td>
 
-                                        <div class="form-group">
+                            </tr>
+                        </table>
 
-                                            <select class="form-control">
-                                                <?php
-                                                //เรียก list ของกลุ่มงานทั้งหมดออกมา
-                                                $workerQS = "SELECT `wname` FROM `worker` GROUP BY `wname`";
-                                                $workerQry = mysqli_query($connection, $workerQS);
-                                                while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
-                                                    ?>
-                                                    <option><?php echo $rowWorker['wname'] ?></option>
-                                                <?php } ?>
-                                            </select>
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-                            </table>
-
-                            <div class="col-md-12" align="center">
-                                <button class="btn btn-sm btn-default" type="reset">
-                                    <span class="glyphicon glyphicon-repeat"></span>&nbsp;รีเซ็ท
-                                </button>
-                                <button id="takeBtn" class="btn btn-lg btn-warning" type="submit">
-                                    <span class="glyphicon glyphicon-minus"></span>&nbsp;ลงบัญชีเบิก
-                                </button>
-                            </div>
-
-                        </div> <!-- /.col-md-8 -->
+                        <div class="col-md-12" align="center">
+                            <button class="btn btn-sm btn-default" type="reset">
+                                <span class="glyphicon glyphicon-repeat"></span>&nbsp;รีเซ็ท
+                            </button>
+                            <button id="takeBtn" class="btn btn-lg btn-warning" type="submit">
+                                <span class="glyphicon glyphicon-minus"></span>&nbsp;ลงบัญชีเบิก
+                            </button>
+                        </div>
                     </form>
-
-
-                    <!-- RIGHT alert box -->
-                    <div class="col-md-4">
-
-                        <div class="alert alert-warning">
-                            <?php
-                            $takeQS = "SELECT `iid`,`detail`,`suffix`,`quantity`,`type`,`owner` FROM `item`"
-                                    . " WHERE `owner` LIKE '" . $_SESSION['name'] . "' AND `type` LIKE 'normal';";
-                            $takeQry = mysqli_query($connection, $takeQS) or die("index takeQS คิวรี่ล้มเหลว<br/>" . mysqli_error($connection));
-
-                            while ($takeRow = mysqli_fetch_assoc($takeQry)) {
-                                echo "<kbd>" . $takeRow['iid'] . "</kbd> <b>[</b>" . $takeRow['detail'] . "<b>]</b> (<u>" . $takeRow['quantity']
-                                . " " . $takeRow['suffix'] . "</u>)<br/>";
-                            }
-                            ?>
-                        </div> 
-
-                    </div> <!-- /.col-md-4 -->
-
                 </div> <!-- /.MAIN CONTAINER -->
             </div> <!-- /.col-md-10 -->
 

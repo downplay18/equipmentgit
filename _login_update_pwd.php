@@ -41,7 +41,6 @@ if (!isset($_SESSION['user_id'])) {
                 $lupdateQS = "SELECT `user_id`,`name`,`division`,`rank`,`building`,`room`,`office_tel`,`status` FROM `user` WHERE `user_id` LIKE '" . $_SESSION['user_id'] . "'";
                 $lupdateQry = mysqli_query($connection, $lupdateQS) or die(mysqli_error($connection));
                 $lupdateResult = mysqli_fetch_assoc($lupdateQry);
-                //print_r($lupdateResult);
                 ?>
 
                 <!-- MAIN CONTAINER, EDIT BOX COLUMN -->
@@ -66,6 +65,12 @@ if (!isset($_SESSION['user_id'])) {
                                 <div class="col-md-3" align="right" style="padding:0.4em"><b>ชื่อพนักงาน</b></div>
                                 <div class="col-md-3"><p type="text" class="form-control-static"><?= $lupdateResult["name"]; ?></div>
                                 <div class="col-md-4"><input type="text" class="form-control input-sm" name="lupdate_name" value="<?= $lupdateResult["name"]; ?>"></div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="col-md-3" align="right" style="padding:0.4em"><b>รหัสผ่าน</b></div>
+                                <div class="col-md-3"><p type="text" class="form-control-static"><?= $lupdateResult["password"]; ?></div>
+                                <div class="col-md-4"><input type="text" class="form-control input-sm" name="lupdate_pwd" value="<?= $lupdateResult["password"]; ?>"></div>
                             </div>
 
                             <div class="col-md-12">
@@ -141,6 +146,7 @@ if (!isset($_SESSION['user_id'])) {
                     <div class="alert alert-warning col-md-4">
                         <span class = "label label-info" role="alert">Info</span> <b>ชื่อ</b> ควรตรงกับบัตรพนักงาน/บัตรประชาชน<br/>
                         <span class = "label label-danger" role="alert">Info</span> <b>รหัสผ่าน</b> ไม่ควรเหมือนเลขพนักงาน<br/>
+                        <span class = "label label-info" role="alert">Info</span> <b>รหัสผ่าน</b> ควรมีความยาวอย่างน้อย 6 - 20 อักขระ<br/>
                         <span class = "label label-warning" role="alert">Info</span> <b>ตำแหน่ง</b> ควรตรงกับประกาศ กฟผ.<br/>
                         <span class = "label label-info" role="alert">Info</span> <b>เบอร์โต๊ะ</b> ควรเป็นปัจจุบันที่ใช้ติดต่อได้<br/>
                     </div>

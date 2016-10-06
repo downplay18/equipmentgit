@@ -57,6 +57,7 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="<?= $root_url ?>/_login_update.php" target="_blank" class="navbar-link"><span class="glyphicon glyphicon-pencil"></span> แก้ไขข้อมูลส่วนตัว</a></li>
+                        <li><a href="<?= $root_url ?>/_login_update_pwd.php" target="_blank"><span class="glyphicon glyphicon-lock"></span> เปลี่ยนรหัสผ่าน</a></li>
                         <li><a href="<?= $root_url ?>/_logout.php"><span class="glyphicon glyphicon-log-out"></span> ออกจากระบบ</a></li>
                     </ul>
                 </li>
