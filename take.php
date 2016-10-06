@@ -48,6 +48,26 @@ if ($_SESSION['user_id'] == "") {
                     <form id="takeForm" action="take_process.php" method="post">
                         <div class="col-md-8">
 
+                            <div class="col-md-6" align="center">
+                                ผู้ลงบันทึกเบิก: <?= $_SESSION['name'] ?>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-md-4">แจ้งเพื่อทราบ: </div>
+                                <div class="col-md-8">
+                                    <select class="form-control">
+                                        <option>-- เลือกผู้รับทราบ --</option>
+                                        <?php
+                                        $knownQS = "SELECT `name`,`division` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "'";
+                                        $knownQry = mysqli_query($connection, $knownQS);
+                                        while ($rowKnown = mysqli_fetch_assoc($knownQry)) {
+                                            ?>
+                                            <option><?php echo $rowKnown['name'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <br/><br/>
+                            </div>
+
                             <table class="table table-bordered">
                                 <col width="60%"> <!-- detail -->
                                 <col width="10%"> <!-- qty --> 
@@ -74,11 +94,11 @@ if ($_SESSION['user_id'] == "") {
                                             <select class="form-control">
                                                 <?php
                                                 //เรียก list ของกลุ่มงานทั้งหมดออกมา
-                                                $siteQS = "SELECT `wname` FROM `worker` GROUP BY `wname`";
-                                                $siteQry = mysqli_query($connection, $siteQS);
-                                                while ($rowSite = mysqli_fetch_assoc($siteQry)) {
+                                                $workerQS = "SELECT `wname` FROM `worker` GROUP BY `wname`";
+                                                $workerQry = mysqli_query($connection, $workerQS);
+                                                while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
                                                     ?>
-                                                    <option><?php echo $rowSite['wname'] ?></option>
+                                                    <option><?php echo $rowWorker['wname'] ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -107,12 +127,12 @@ if ($_SESSION['user_id'] == "") {
                         <div class="alert alert-warning">
                             <?php
                             $takeQS = "SELECT `iid`,`detail`,`suffix`,`quantity`,`type`,`owner` FROM `item`"
-                                    . " WHERE `owner` LIKE '".$_SESSION['name']."' AND `type` LIKE 'normal';";
+                                    . " WHERE `owner` LIKE '" . $_SESSION['name'] . "' AND `type` LIKE 'normal';";
                             $takeQry = mysqli_query($connection, $takeQS) or die("index takeQS คิวรี่ล้มเหลว<br/>" . mysqli_error($connection));
-                            
+
                             while ($takeRow = mysqli_fetch_assoc($takeQry)) {
                                 echo "<kbd>" . $takeRow['iid'] . "</kbd> <b>[</b>" . $takeRow['detail'] . "<b>]</b> (<u>" . $takeRow['quantity']
-                                . " " . $takeRow['suffix']."</u>)<br/>";
+                                . " " . $takeRow['suffix'] . "</u>)<br/>";
                             }
                             ?>
                         </div> 

@@ -25,7 +25,7 @@ if ($_SESSION['user_id'] != "") {
 /* $_POST ของ Username = login_cid */
 /* $_POST ของ Password = login_pwd */
     require("connection.php");
-    $strSQL = "SELECT `user_id`,`status`,`name` FROM user WHERE `user_id` = '" . mysql_real_escape_string($_POST["login_cid"]) . "'
+    $strSQL = "SELECT `user_id`,`status`,`name`,`division` FROM user WHERE `user_id` = '" . mysql_real_escape_string($_POST["login_cid"]) . "'
 	AND `password` = '" . mysql_real_escape_string($_POST["login_pwd"]) . "'"; /* ไม่ SELECT `Password` เพราะไม่ได้แสดงค่ามัน */
     $loginQuery = mysqli_query($connection, $strSQL) or die("_login_check.php คิวรี่ล้มเหลว!");
     $loginResult = mysqli_fetch_assoc($loginQuery); /* ได้ loginResult เป็นผลลัพธ์ของการ query */
@@ -38,7 +38,8 @@ if (!$loginResult) {
     $_SESSION["user_id"] = $loginResult["user_id"]; /* user_id เป็น PRIMARY KEY ของ `user` */
     $_SESSION["status"] = $loginResult["status"];
     $_SESSION["name"] = $loginResult["name"];
-
+    $_SESSION["division"] = $loginResult['division'];
+    
     //unset($loginResult);
     session_write_close();
 
