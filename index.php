@@ -5,7 +5,7 @@ require_once 'connection.php';
 
 include 'root_url.php';
 
-if($_SESSION['user_id']!=""){
+if(isset($_SESSION['user_id'])){
     header("Location: $root_url/_login_check.php", true, 302);
 }
 ?>

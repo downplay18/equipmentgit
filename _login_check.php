@@ -44,8 +44,10 @@ if (!$loginResult) {
 
     if ($loginResult["status"] == "BOSS") {
         header("location:_login_boss.php");
-    } else {
+    } elseif($loginResult["status"] == "USER") {
         header("location:_login_user.php");
+    } else {
+        header("location:index.php");
     }
 
     //unset($loginResult);
