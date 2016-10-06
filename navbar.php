@@ -30,7 +30,16 @@
                     </ul>
                 </li>
 
-                <li><a href="#">คู่มือ</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">คู่มือการใช้งาน<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?= $root_url ?>/#" target="_blank">หัวหน้างาน(BOSS)</a></li>
+                        <li><a href="<?= $root_url ?>/#" target="_blank">ผู้ใช้ทั่วไป(USER)</a></li>
+                        <?php if (isset($_SESSION['status']) && $_SESSION['status'] == 'ADMIN') { ?>
+                            <li><a href="<?= $root_url ?>/#" target="_blank">ผู้ดูแลระบบ(ADMIN)</a></li>
+                        <?php } ?>
+                    </ul>
+                </li>
             </ul> 
 
 
@@ -42,39 +51,26 @@
                 $objQuery = mysqli_query($connection, $strSQL) or die("Error: " . mysqli_error($connection));
                 $loginResult = mysqli_fetch_array($objQuery); /* ไม่ได้ SELECT Status เพราะ ใช้ค่าจาก $_SESSION */
                 ?>
+                <div class="nav navbar-nav navbar-right">
+                    <p class = "navbar-text">
+                        <a href="_login_update.php" target="" class="navbar-link"><?= "[" . $loginResult["user_id"] . "] " . $loginResult["name"] . "</a> (สถานะ: " . $_SESSION["status"] . ") &nbsp;" ?>
+                    </p>
+                <?php } ?>
 
-                <!-- Sign Out กลับไปหน้า Index -->
-                <div class="btn-group navbar-right">
-                    <a class="btn btn-default navbar-btn" href="_logout.php" role="button">
-                        <span class="glyphicon glyphicon-log-out"></span>&nbsp;ออกจากระบบ
-                    </a>
-                </div> <!-- /Sign Out กลับไปหน้า Index -->
-
-                <p class = "navbar-text navbar-right">
-                    <?php
-                    if (empty($loginResult['division'])) {
-                        echo "ยังไม่ระบุสังกัด";
-                    } else {
-                        echo $loginResult['division'];
-                    }
-                    ?> 
-                    <a href="_login_update.php" target="" class="navbar-link"><?= "[" . $loginResult["user_id"] . "] " . $loginResult["name"] . "</a> (" . $_SESSION["status"] . ") &nbsp;" ?>
-
-
-                </p>
-
-            <?php } ?>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="<?= $root_url ?>/_login_update.php" target="_blank" class="navbar-link"><span class="glyphicon glyphicon-pencil"></span> แก้ไขข้อมูลส่วนตัว</a></li>
+                        <li><a href="<?= $root_url ?>/_logout.php"><span class="glyphicon glyphicon-log-out"></span> ออกจากระบบ</a></li>
+                    </ul>
+                </li>
+            </div> <!-- /.navbar-right -->
 
             <div class="navbar-form navbar-left">
 
             </div>
 
-
-
-
-
-
-        </div>
-    </div>
+        </div> <!-- /.collapse navbar-collapse -->
+    </div> <!-- /.container-fluid -->
 </nav>
 

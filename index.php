@@ -5,7 +5,7 @@ require_once 'connection.php';
 
 include 'root_url.php';
 
-if($_SESSION['user_id']!=""){
+if (isset($_SESSION['user_id'])) {
     header("Location: $root_url/_login_check.php", true, 302);
 }
 ?>
@@ -20,20 +20,23 @@ if($_SESSION['user_id']!=""){
 
         <?php
         include("navbar.php");
-        
-          echo '<br/>';
-          echo 'SESSION = ';
-          print_r($_SESSION);
-          //echo '<br/>loginResult =<br/>';
-          //print_r($loginResult);
-          echo '<br/>POST = <br/>';
-          print_r($_POST); 
+
+        echo '<br/>';
+        echo 'SESSION = ';
+        print_r($_SESSION);
+        //echo '<br/>loginResult =<br/>';
+        //print_r($loginResult);
+        echo '<br/>POST = <br/>';
+        print_r($_POST);
         ?>
 
         <div class="row">
-            
+
             <div class="col-md-2 sidebar">
-                <?php include 'sidebar.php'; ?>
+                <div class="list-group">
+                    <a href="#" class="list-group-item active" align="center"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;ล็อกอิน</a>
+                    <a href="<?= $root_url ?>/#" class="list-group-item"><span class="glyphicon glyphicon-book"></span> คู่มือการใช้งาน</a>
+                </div>   
             </div>
 
             <div class="col-md-10" style="padding: 80px">
