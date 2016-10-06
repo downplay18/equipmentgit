@@ -46,14 +46,10 @@
 
             <?php
             if (isset($_SESSION['user_id'])) {
-                /* ใช้แสดงชื่อผู้ล็อกอิน */ /* `user_id`,`password`,`name` */
-                $strSQL = "SELECT * FROM user WHERE user_id = '" . $_SESSION['user_id'] . "' ";
-                $objQuery = mysqli_query($connection, $strSQL) or die("Error: " . mysqli_error($connection));
-                $loginResult = mysqli_fetch_array($objQuery); /* ไม่ได้ SELECT Status เพราะ ใช้ค่าจาก $_SESSION */
                 ?>
                 <div class="nav navbar-nav navbar-right">
                     <p class = "navbar-text">
-                        <a href="_login_update.php" target="" class="navbar-link"><?= "[" . $loginResult["user_id"] . "] " . $loginResult["name"] . "</a> (สถานะ: " . $_SESSION["status"] . ") &nbsp;" ?>
+                        <a href="_login_update.php" target="" class="navbar-link"><?= "[" . $_SESSION["user_id"] . "] " . $_SESSION["name"] . "</a> (สถานะ: " . $_SESSION["status"] . ") &nbsp;" ?>
                     </p>
                 <?php } ?>
 
