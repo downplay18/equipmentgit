@@ -71,10 +71,7 @@ if (!isset($_SESSION['user_id'])) {
                             <div class="col-md-12">
                                 <div class="col-md-3" align="right" style="padding:0.4em"><b>สังกัด</b></div>
                                 <div class="col-md-3"><p type="text" class="form-control-static"><?= $lupdateResult['division']; ?></div>
-
-
                                 <div class="col-md-6">
-
                                     <select class="form-control" name="lupdate_div">
                                         <option></option>
                                         <?php
@@ -84,12 +81,8 @@ if (!isset($_SESSION['user_id'])) {
                                             ?>
                                             <option><?php echo $rowDiv['listDivision'] ?></option>
                                         <?php } ?>
-
                                     </select>
-
                                 </div>
-
-
                             </div>
 
                             <div class="col-md-12">
