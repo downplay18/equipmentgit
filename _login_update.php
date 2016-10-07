@@ -78,7 +78,7 @@ if (!isset($_SESSION['user_id'])) {
                                     <select class="form-control" name="lupdate_div">
                                         <option></option>
                                         <?php
-                                        $divQS = "SELECT `listDivision` FROM `list_division`";
+                                        $divQS = "SELECT `divisionID`,`listDivision` FROM `list_division` ORDER BY `divisionID` ASC";
                                         $divQry = mysqli_query($connection, $divQS);
                                         while ($rowDiv = mysqli_fetch_assoc($divQry)) {
                                             ?>
@@ -134,8 +134,8 @@ if (!isset($_SESSION['user_id'])) {
                     </form>
                     <!-- /MAIN EDIT BOX COLUMN --->
 
-                    <div class="alert alert-info col-md-4">
-                        <span class = "label label-info" role="alert">Info</span> สามารถเว้นว่างไว้ หากไม่ต้องการเปลี่นแปลง<br/>
+                    <div class="alert alert-danger col-md-4">
+                        <span class = "label label-danger">!</span> เมื่อเปลี่ยนแปลงแล้วต้องเข้าสู่ระบบใหม่อีกครั้ง<br/>
                     </div>
 
                     <div class="alert alert-warning col-md-4">
