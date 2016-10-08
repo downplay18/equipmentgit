@@ -6,13 +6,13 @@ session_start();
 
 echo '<br/>';
 echo 'SESSION = ';
-print_r($_SESSION);
+print_r($_SESSION); /*
 echo '<br/>loginResult =<br/>';
-print_r($loginResult);
+print_r($loginResult); */
 echo '<br/>POST = <br/>';
 print_r($_POST);
 
-if ($_SESSION['user_id'] != "") {
+if (isset($_SESSION['user_id'])) {
     if ($_SESSION["status"] == "BOSS") {
         header("location:_login_boss.php");
     } else {
@@ -25,9 +25,9 @@ if ($_SESSION['user_id'] != "") {
 /* $_POST ของ Username = login_cid */
 /* $_POST ของ Password = login_pwd */
 require("connection.php");
-$strSQL = "SELECT `user_id`,`status`,`name`,`division`,`myboss` FROM user WHERE `user_id` = '" . mysql_real_escape_string($_POST["login_cid"]) . "'
+$strSQL = "SELECT `user_id`,`status`,`name`,`division` FROM user WHERE `user_id` = '" . mysql_real_escape_string($_POST["login_cid"]) . "'
 	AND `password` = '" . mysql_real_escape_string($_POST["login_pwd"]) . "'"; /* ไม่ SELECT `Password` เพราะไม่ได้แสดงค่ามัน */
-$loginQuery = mysqli_query($connection, $strSQL) or die("_login_check.php คิวรี่ล้มเหลว!");
+$loginQuery = mysqli_query($connection, $strSQL) or die("_login_check: ".mysqli_error($connection));
 $loginResult = mysqli_fetch_assoc($loginQuery); /* ได้ loginResult เป็นผลลัพธ์ของการ query */
 /* =====/_login_connection===== */
 
@@ -39,9 +39,6 @@ if (!$loginResult) {
     $_SESSION["status"] = $loginResult["status"];
     $_SESSION["name"] = $loginResult["name"];
     $_SESSION["division"] = $loginResult['division'];
-    if ($loginResult['status'] == "KEY") {
-        $_SESSION['myboss'] = $loginResult['myboss'];
-    }
 
     //unset($loginResult);
     session_write_close();
