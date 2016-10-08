@@ -4,9 +4,12 @@ session_start();
 require_once 'connection.php';
 
 include 'root_url.php';
-if (!isset($_SESSION['user_id'])) {
+if ($_SESSION['user_id'] == "") {
     header("Location: $root_url/index.php", true, 302);
     exit();
+}
+if($_SESSION['status'] != "BOSS") {
+    header("Location: $root_url/_login_check.php", true, 302);
 }
 ?>
 

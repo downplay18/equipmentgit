@@ -8,6 +8,9 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: $root_url/index.php", true, 302);
     exit();
 }
+if($_SESSION['status'] == "BOSS") { //เพราะ ขี้เกียจเขียน 2เคส ทั้ง USER และ ADMIN
+    header("Location: $root_url/_login_check.php", true, 302);
+}
 ?>
 
 <html>
