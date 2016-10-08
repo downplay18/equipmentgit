@@ -85,7 +85,6 @@ if ($_SESSION['status'] != "BOSS") {
                             </button>
                         </form>
                     <?php } ?>
-
                 </div> <!-- /.container-fluid -->
             </div> <!-- /.col-md-10 -->
 
