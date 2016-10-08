@@ -79,8 +79,14 @@ if (!isset($_SESSION['user_id'])) {
                                         $divQry = mysqli_query($connection, $divQS);
                                         while ($rowDiv = mysqli_fetch_assoc($divQry)) {
                                             ?>
-                                            <option><?php echo $rowDiv['listDivision'] ?></option>
-                                        <?php } ?>
+                                            <option <?php
+                                            if ($_SESSION['division'] == $rowDiv['listDivision']) {
+                                                echo 'selected';
+                                            }
+                                            ?> >
+                                            <?php echo $rowDiv['listDivision'] ?>
+                                            </option>
+<?php } ?>
                                     </select>
                                 </div>
                             </div>
@@ -142,7 +148,7 @@ if (!isset($_SESSION['user_id'])) {
             </div> <!--col-md-10-->
         </div> <!-- /.row -->
 
-        <?php include 'main_script.php'; ?>
+<?php include 'main_script.php'; ?>
 
         <script> /* PREVENT DOUBLE SUBMIT: ทำให้ปุ่ม submit กดได้ครั้งเดียว ป้องกับปัญหาเนต lag แล้ว user กดเบิ้ล มันจะทำให้ส่งค่า 2 เท่า */
             $(document).ready(function () {
