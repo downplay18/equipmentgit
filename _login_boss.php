@@ -50,14 +50,15 @@ if ($_SESSION['status'] != "BOSS") {
                     $configQS = "SELECT `cname`,`mykey`,`favworker` FROM `user_config` WHERE `cname` LIKE '" . $_SESSION['name'] . "'";
                     $configQry = mysqli_query($connection, $configQS) or die("_login_boss query error: " . mysqli_error($connection));
                     $resultConfig = mysqli_fetch_assoc($configQry);
-                    if (count($resultConfig['cname']) == 0) {
+                    if (count($resultConfig['cname']) == 0 || $resultConfig['mykey'] == "") {
                         echo "ยังไม่มีผู้ดูแลประจำกลุ่มงาน:";
                         ?>
                         <form action="_login_boss_selkey.php" method="post">
                             <select class="form-control" name="boss_selkey" style="width: 20em">
                                 <?php
                                 echo "<option>-- เลือกผู้ดูแลที่นี่ --</option>";
-                                $ulistQS = "SELECT `name` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "'";
+                                $ulistQS = "SELECT `name` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "'"
+                                        . " AND `status` LIKE 'USER'";
                                 $ulistQry = mysqli_query($connection, $ulistQS);
                                 while ($rowUlist = mysqli_fetch_assoc($ulistQry)) {
                                     echo "<option>" . $rowUlist['name'] . "</option>";
@@ -72,7 +73,7 @@ if ($_SESSION['status'] != "BOSS") {
                         </form>
                     <?php } else { ?>
                         <!--แสดง/ลบ ผู้ดูแลประจำกลุ่มงาน -->
-                        <form action="_login_boss_deleteSelkey.php" method="post" style="margin: 0; padding: 0">
+                        <form action="_login_boss_deleteSelkey.php" method="get" style="margin: 0; padding: 0">
                             <b>ผู้ดูแลประจำกลุ่มงานของคุณคือ </b>
                             <?php
                             $cuserQS = "SELECT `mykey` FROM `user_config` WHERE `cname` LIKE '" . $_SESSION['name'] . "'";
@@ -80,6 +81,7 @@ if ($_SESSION['status'] != "BOSS") {
                             $cuserResult = mysqli_fetch_assoc($cuserQry);
                             echo $cuserResult['mykey'];
                             ?>
+                            <input class="hidden" name="getmykey" value="<?= $cuserResult['mykey'] ?>"/>
                             <button class="btn btn-default" type="submit">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </button>

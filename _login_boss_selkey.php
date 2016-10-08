@@ -7,14 +7,20 @@ include 'root_url.php';
 print_r($_POST);
 
 
-if ($_POST['boss_selkey'] == '-- เลือกผู้ดูแลที่นี่ --') {
+if ($_POST['boss_selkey'] == '-- เลือกผู้ดูแลที่นี่ --') { //ไม่เลือกแต่กดตกลง
     header("Location: $root_url/_login_check.php", true, 302);
-} else {
+} else { //เลือก > แก้ค่าใน table:user_config และ table:user
     $escapeName = $_SESSION['name'];
     $escapeSelkey = $_POST['boss_selkey'];
-    
-    $selkeyQS = "INSERT INTO `user_config` (`cname`,`mykey`) VALUES ('$escapeName','$escapeSelkey')";
-    $selkeyQry = mysqli_query($connection,$selkeyQS) or die("INSERT INTO ล้มเหลว: ".mysqli_error($connection));
+
+    //เพิ่มค่าใน table:config
+    $selkeyQS = "INSERT INTO `user_config` (`cname`,`mykey`) VALUES ('$escapeName','$escapeSelkey') ON DUPLICATE KEY UPDATE `mykey`='$escapeSelkey';";
+    $selkeyQry = mysqli_query($connection, $selkeyQS) or die("INSERT INTO ล้มเหลว: " . mysqli_error($connection));
+
+    //แก้ status ใน table:user
+    $statusQS = "UPDATE `user` SET `status`='KEY' WHERE `name`='" . $escapeSelkey . "';";
+    $statusQry = mysqli_query($connection,$statusQS) or die("UPDATE status ล้มเหลว: " . mysqli_error($connection));
+
     header("Location: $root_url/_login_check.php", true, 302);
 }
 ?>
