@@ -8,6 +8,9 @@ if ($_SESSION['user_id'] == "") {
     header("Location: $root_url/index.php", true, 302);
     exit();
 }
+if($_SESSION['status']!=KEY) {
+    header("Location: $root_url/index.php", true, 302);
+}
 ?>
 
 <html>
@@ -60,7 +63,7 @@ if ($_SESSION['user_id'] == "") {
                                     $knownQry = mysqli_query($connection, $knownQS);
                                     while ($rowKnown = mysqli_fetch_assoc($knownQry)) {
                                         ?>
-                                        <option value="<?= $rowKnown['name'] ?>">
+                                        <option value="<?= $rowKnown['name'] ?>" <?php  ?>>
                                                     <?= $rowKnown['name'] ?>
                                         </option>
                                     <?php } ?>
@@ -130,6 +133,8 @@ if ($_SESSION['user_id'] == "") {
                                 <span class="glyphicon glyphicon-minus"></span>&nbsp;ลงบัญชีเบิก
                             </button>
                         </div>
+                        
+                        <div class="col-md-12"></div>
                     </form>
                 </div> <!-- /.MAIN CONTAINER -->
             </div> <!-- /.col-md-10 -->

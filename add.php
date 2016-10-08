@@ -8,6 +8,9 @@ if ($_SESSION['user_id'] == "") {
     header("Location: $root_url/index.php", true, 302);
     exit();
 }
+if($_SESSION['status']!=KEY) {
+    header("Location: $root_url/index.php", true, 302);
+}
 ?>
 
 <html>
