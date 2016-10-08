@@ -61,20 +61,6 @@ if($_SESSION['status'] == "BOSS") { //เพราะ ขี้เกียจ�
 
         <!--Script -->
         <?php include 'main_script.php'; ?>
-        <script src="js/jquery.table2excel.js" type="text/javascript"></script>
-
-        <!--Live Search Script -->
-        <script>
-            var $search_rows = $('#search_table tr');
-            $('#search_live').keyup(function () {
-                var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-
-                $search_rows.show().filter(function () {
-                    var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                    return !~text.indexOf(val);
-                }).hide();
-            });
-        </script><!-- /Live Search Script -->
 
 
     </body>
