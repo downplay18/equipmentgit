@@ -8,7 +8,7 @@ if ($_SESSION['user_id'] == "") {
     header("Location: $root_url/index.php", true, 302);
     exit();
 }
-if($_SESSION['status']!=KEY) {
+if ($_SESSION['status'] != "KEY") {
     header("Location: $root_url/index.php", true, 302);
 }
 ?>
@@ -51,19 +51,33 @@ if($_SESSION['status']!=KEY) {
 
                     <form id="takeForm" action="take_process.php" method="post">
 
+                        <!-- ชื่อผู้ลงบันทึก -->
                         <div class="col-md-6" align="center">
                             ผู้ลงบันทึกเบิก: <?= $_SESSION['name'] ?>
                         </div>
+                        <!-- เลือกหัวหน้าเพื่อแจ้งทราบ -->
                         <div class="col-md-6">
                             <div class="col-md-4" align="right">แจ้งเพื่อทราบ:<br></div>
                             <div class="col-md-8">
-                                <select class="form-control" selected="<?= $_SESSION['myboss'] ?>">
+                                <?php
+                                //หา BOSS ที่ตั้งเราเป็น mykey
+                                $bossSetKeyQS = "SELECT `cname` FROM `user_config` WHERE `mykey` LIKE '" . $_SESSION['name'] . "'";
+                                $bossSetKeyQry = mysqli_query($connection, $bossSetKeyQS);
+                                $bossSetKeyResult = mysqli_fetch_assoc($bossSetKeyQry);
+                                ?>
+                                <!-- ต้องทำเป็น list ไว้กรณีที่มีหัวหน้าเลือกเราเป็น KEY 2 คน -->
+                                <select class="form-control" name="take_known">
                                     <?php
-                                    $knownQS = "SELECT `name`,`division` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "';";
+                                    $knownQS = "SELECT `name` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "';";
                                     $knownQry = mysqli_query($connection, $knownQS);
                                     while ($rowKnown = mysqli_fetch_assoc($knownQry)) {
                                         ?>
-                                        <option value="<?= $rowKnown['name'] ?>" <?php  ?>>
+                                        <option value="<?= $rowKnown['name'] ?>" <?php
+                                        //โค้ดแสดง selected รายชื่อบอส
+                                        if ($rowKnown['name'] == $bossSetKeyResult['cname']) {
+                                            echo 'selected';
+                                        }
+                                        ?>>
                                                     <?= $rowKnown['name'] ?>
                                         </option>
                                     <?php } ?>
@@ -133,7 +147,7 @@ if($_SESSION['status']!=KEY) {
                                 <span class="glyphicon glyphicon-minus"></span>&nbsp;ลงบัญชีเบิก
                             </button>
                         </div>
-                        
+
                         <div class="col-md-12"></div>
                     </form>
                 </div> <!-- /.MAIN CONTAINER -->
