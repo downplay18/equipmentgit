@@ -54,13 +54,13 @@ if ($_SESSION['user_id'] == "") {
                         <div class="col-md-6">
                             <div class="col-md-4" align="right">แจ้งเพื่อทราบ:<br></div>
                             <div class="col-md-8">
-                                <select class="form-control">
+                                <select class="form-control" selected="<?= $_SESSION['myboss'] ?>">
                                     <?php
                                     $knownQS = "SELECT `name`,`division` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "';";
                                     $knownQry = mysqli_query($connection, $knownQS);
                                     while ($rowKnown = mysqli_fetch_assoc($knownQry)) {
                                         ?>
-                                        <option value="<?= $rowKnown['name'] ?>" selected="<?= $_SESSION['myboss'] ?>">
+                                        <option value="<?= $rowKnown['name'] ?>">
                                                     <?= $rowKnown['name'] ?>
                                         </option>
                                     <?php } ?>
