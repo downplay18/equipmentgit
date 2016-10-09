@@ -107,7 +107,7 @@ if ($_SESSION['status'] != "KEY") {
                                 ?>
                                 <tr>
                                     <td><?= "<span class='label label-default'>" . $rowTake['quantity'] . " " . $rowTake['suffix'] . "</span> " . $rowTake['detail'] ?></td>
-                                    <td><input class="form-control" type="number" name=""/></td>
+                                    <td><input class="form-control" type="number" name="post_takeQty[]"/></td>
                                     <td><input class="form-control" value="<?= $rowTake['suffix'] ?>" name="" disabled/></td>
                                     <td> <!-- listลูกจ้าง ที่อยู่กลุ่มงานเดียวกัน -->
                                         <div class="form-group">
