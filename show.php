@@ -54,40 +54,74 @@ if ($_SESSION['user_id'] == "") {
                     <?php require("connection.php"); ?>
                     <div class="row">
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="selDiv">ค้นหาโดยกลุ่มงาน</label>
-                                <select class="form-control" id="selDiv">
+                        <div class="col-md-6">
+                            <label for="selDiv">ค้นหาโดยกลุ่มงาน</label>
+                            <div class="input-group" id="selDiv">
+                                <select class="form-control">
                                     <option>-- เลือกกลุ่มงาน --</option>
                                     <?php
-                                    //เรียก list ของกลุ่มงานทั้งหมดออกมา
+                                    //เรียก list กลุ่มงานทั้งหมด
                                     $divQS = "SELECT `listDivision` FROM `list_division`";
                                     $divQry = mysqli_query($connection, $divQS);
                                     while ($rowDiv = mysqli_fetch_assoc($divQry)) {
                                         ?>
-                                        <option><?php echo $rowDiv['listDivision'] ?></option>
+                                        <option 
+                                        <?php
+                                        //เลือกกลุ่มงานตัวเองไว้โดยอัตโนมัติ
+                                        if ($rowDiv['listDivision'] == $_SESSION['division']) {
+                                            echo 'selected';
+                                        }
+                                        ?>>
+                                            <?php echo $rowDiv['listDivision']; ?></option>
                                     <?php } ?>
                                 </select>
-                            </div>
-                        </div>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="button" autofocus="" ><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+                                </span>
+                            </div> <!-- /input-group -->
+                        </div> <!-- /.col-md-6 -->
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="selSite">ค้นหาโดยสถานที่ใช้งาน</label>
-                                <select class="form-control" id="selSite">
-                                    <option>-- เลือกสถานที่ --</option>
+                        <div class="col-md-6">
+                            <label for="selBuilding">ค้นหาโดยสถานที่ใช้งาน</label>
+                            <div class="input-group" id="selBuilding">
+                                <select class="form-control">
+                                    <option>-- เลือกสถานที่ใช้งาน --</option>
                                     <?php
-                                    //เรียก list ของกลุ่มงานทั้งหมดออกมา
+                                    //เรียก list ตุกทั้งหมด
                                     $siteQS = "SELECT `listBuilding` FROM `list_building`";
                                     $siteQry = mysqli_query($connection, $siteQS);
                                     while ($rowSite = mysqli_fetch_assoc($siteQry)) {
                                         ?>
-                                        <option><?php echo $rowSite['listBuilding'] ?></option>
+                                        <option><?= $rowSite['listBuilding']; ?></option>
                                     <?php } ?>
                                 </select>
-                            </div>
-                        </div>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+                                </span>
+                            </div> <!-- /input-group -->
+                        </div> <!-- /.col-md-6 -->
 
+                        <div class="col-md-12">
+                            <br/>
+                            กำลังแสดงตารางของ: <?= $_SESSION['division']; ?>
+                            <?php
+                            $initQS = "SELECT `detail`,`quantity`,`suffix`,`type`,`owner` FROM `item` WHERE `owner` IN"
+                                    . " (SELECT `name` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "')";
+                            $initQry = mysqli_query($connection, $initQS);
+                            ?>
+                            <table>
+                                <?php
+                                while ($rowInit = mysqli_fetch_assoc($initQry)) {
+                                    ?>
+                                <tr align="center">
+                                    <th>รายการ</th>
+                                    <th>จำนวน</th>
+                                    <th>หน่วย</th>
+                                    <th>ประเภท</th>
+                                    <th>ผู้</th>
+                                </tr>
+                                <?php } ?>
+                        </div> <!-- /0col-md-12 -->
 
                     </div><!-- Main container -->
                 </div> <!-- /.col-md-10 -->
@@ -96,13 +130,7 @@ if ($_SESSION['user_id'] == "") {
 
 
 
-
-
-
-
-            <?php
-            include 'main_script.php';
-            ?>
+            <?php include 'main_script.php'; ?>
 
             <!--Live Search Script -->
             <script>

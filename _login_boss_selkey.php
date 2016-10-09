@@ -19,7 +19,14 @@ if ($_POST['boss_selkey'] == '-- เลือกผู้ดูแลที่�
 
     //แก้ status ใน table:user
     $statusQS = "UPDATE `user` SET `status`='KEY' WHERE `name`='" . $escapeSelkey . "';";
-    $statusQry = mysqli_query($connection,$statusQS) or die("UPDATE status ล้มเหลว: " . mysqli_error($connection));
+    $statusQry = mysqli_query($connection, $statusQS) or die("UPDATE status ล้มเหลว: " . mysqli_error($connection));
+
+    //บันทึกลงใน edit_record
+    date_default_timezone_set("Asia/Bangkok");
+    $recordQS = "INSERT INTO `item_edit_record` (`edit_date`,`edit_time`,`editor`,`note`)";
+    $recordQS .= " VALUES ('".date('Y-m-d')."','". date("H:i") ."','$escapeName','ตั้งผู้KEYประจำกลุ่มงาน เป็น $escapeSelkey');"  ;
+    echo $recordQS;
+    $recordQry = mysqli_query($connection,$recordQS) or die ("INSERT record ล้มเหลว: ".mysqli_error($connection));
 
     header("Location: $root_url/_login_check.php", true, 302);
 }

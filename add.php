@@ -8,7 +8,7 @@ if ($_SESSION['user_id'] == "") {
     header("Location: $root_url/index.php", true, 302);
     exit();
 }
-if($_SESSION['status']!=KEY) {
+if($_SESSION['status']!="KEY") {
     header("Location: $root_url/index.php", true, 302);
 }
 ?>
@@ -51,7 +51,7 @@ if($_SESSION['status']!=KEY) {
                     <!-- form and submit button -->
                     <form id="mainForm" action="add_confirm.php" method="post">
 
-                        <!-- เลขที่ใบเสร็จ+วันที่+ชื่อผู้เพิ่มฯ -->
+                        <!-- เลขที่ใบเสร็จ+วันที่+กลุ่มงานเข้าของรายการ -->
                         <div class="col-md-12">
 
                             <div class="row alert alert-danger">
@@ -72,13 +72,13 @@ if($_SESSION['status']!=KEY) {
 
                                 <div class="col-md-4">
                                     <div class="input-group">
-                                        <span class="input-group-addon">ชื่อผู้เพิ่มรายการ</span>
-                                        <input type="text" class="form-control" name="var_adder" value="<?= $_SESSION["name"]; ?>" style="padding: 0.4em;" readonly>
+                                        <span class="input-group-addon">เป็นของกลุ่มงาน</span>
+                                        <input type="text" class="form-control" name="var_adder" value="<?= $_SESSION["division"]; ?>" style="padding: 0.4em;" readonly>
                                     </div>
                                 </div>
 
                             </div> 
-                        </div><!-- /เลขที่ใบเสร็จ+วันที่+ชื่อผู้เพิ่มฯ -->
+                        </div> <!-- /เลขที่ใบเสร็จ+วันที่+กลุ่มงานเข้าของรายการ -->
 
                         <!-- file upload -->
                         <div class="col-md-12 well" align="center">
