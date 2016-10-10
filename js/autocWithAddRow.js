@@ -80,7 +80,7 @@ function check() {
 $('#varDetail_1').autocomplete({
     source: function (request, response) {
         $.ajax({
-            url: 'autoc_ajax.php',
+            url: 'add_autoc_ajax.php',
             dataType: "json",
             method: 'post',
             data: {
