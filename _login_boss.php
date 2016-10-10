@@ -87,6 +87,15 @@ if ($_SESSION['status'] != "BOSS") {
                             </button>
                         </form>
                     <?php } ?>
+                        
+                        <?php //แสดงรายการที่ยังไม่กดรับทราบ
+                        $knowQS = "SELECT * FROM `item_add_record` WHERE `adder` LIKE '". $_SESSION['division'] ."'";
+                        $knownQry = mysqli_query($connection, $knowQS);
+                        while($rowKnown = mysqli_fetch_assoc($knownQry)) {
+                            print_r($rowKnown);
+                            echo "<br/>";
+                        }
+                        ?>
                 </div> <!-- /.container-fluid -->
             </div> <!-- /.col-md-10 -->
 
