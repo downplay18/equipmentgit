@@ -22,14 +22,14 @@ if($_SESSION['status']!="KEY") {
 
         <?php
         include("navbar.php");
-
+        
         echo '<br/>';
         echo 'SESSION = ';
         print_r($_SESSION);
         echo '<br/>loginResult =<br/>';
         print_r($loginResult);
         echo '<br/>POST = <br/>';
-        print_r($_POST);
+        print_r($_POST); 
         ?>
 
 
@@ -103,13 +103,13 @@ if($_SESSION['status']!="KEY") {
                                     <th><input class='check_all' type='checkbox' onclick="select_all()"/></th>
                                     <th>#</th>
                                     <th>ZDIR</th>
-                                    <th>รายการ</th>
+                                    <th>รายการ(ชื่อตามใบราคากลาง)</th>
                                     <th>หน่วย</th>
                                     <th>จำนวน</th>
                                     <th>ราคา/หน่วย</th>
                                     <th>จำนวนเงิน</th>
                                     <th bgcolor="#ffff66">หน่วยย่อย</th>
-                                    <th bgcolor="#ffff66">จำนวนย่อย/หน่วยย่อย</th>
+                                    <th bgcolor="#ffff66">แปลงหน่วย</th>
                                 </tr>
                                 <tr>
                                     <td><input type='checkbox' class='case'/></td>
@@ -188,7 +188,8 @@ if($_SESSION['status']!="KEY") {
                     </div>
 
                     <div class="container col-md-4">
-                        <div class = "alert alert-info">
+                        <div class = "alert alert-info"> 
+                            <span class = "label label-warning">INFO</span> แปลงหน่วย คือ ใน 1 หน่วย มีกี่ชิ้น<br/>
                             <span class = "label label-warning">INFO</span> ใส่ค่าให้ครบทุกช่อง<br/>
                             <span class = "label label-warning">INFO</span> <font color="red">จน./หน่วย</font> คือ จำนวน "ของ" ใน 1 หน่วยใบเสร็จ<br/>
                             <span class = "label label-warning">INFO</span> ถ้า<font color="blue">หน่วยย่อย</font>ไม่เปลี่ยน ให้ใช้ <font color="red">จำนวนย่อย/หน่วยย่อย</font> เป็น 1<br/>

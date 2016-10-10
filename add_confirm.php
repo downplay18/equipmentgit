@@ -1,8 +1,15 @@
 <?php
+//var_dump($_SESSION);
 session_start();
+require_once 'connection.php';
+
+include 'root_url.php';
 if ($_SESSION['user_id'] == "") {
-    echo "<br/>โปรดยืนยันตัวตนก่อน !";
+    header("Location: $root_url/index.php", true, 302);
     exit();
+}
+if($_SESSION['status']!="KEY") {
+    header("Location: $root_url/index.php", true, 302);
 }
 ?>
 
@@ -15,21 +22,16 @@ if ($_SESSION['user_id'] == "") {
 
 
     <?php
-    /* เลือกแสดง navbar แบบ ล็อกอินแล้ว(authenticated) และ ยังไม่ล็อกอิน(unauthenticated) */
-    if (!isset($_SESSION['user_id'])) {
-        include("navbar_unauthen.php");
-    } else {
-        include("navbar_authen.php");
-    }
-    /*
-      echo '<br/>';
-      echo 'SESSION = ';
-      print_r($_SESSION);
-      echo '<br/>loginResult =<br/>';
-      print_r($loginResult);
-      echo '<br/>POST = <br/>';
-      print_r($_POST); */
-    ?>
+        include("navbar.php");
+        /*
+        echo '<br/>';
+        echo 'SESSION = ';
+        print_r($_SESSION);
+        echo '<br/>loginResult =<br/>';
+        print_r($loginResult);
+        echo '<br/>POST = <br/>';
+        print_r($_POST); */
+        ?>
 
     <!-- breadcrumb -->
     <div class="container-fluid">
@@ -60,7 +62,7 @@ if ($_SESSION['user_id'] == "") {
 
 
     /* บังคับให้ "ชื่อผู้เพิ่มรายการ" เป็นชื่อคนที่ล็อกอินในขณะนั้น */
-    $_POST['var_adder'] = $_SESSION['name'];
+    //$_POST['var_adder'] = $_SESSION['name'];
 
     //filter array เพื่อทำให้แถวที่เป็น empty string ถูกทำให้ null โดยไม่เสียตำแหน่งที่ถูกต้องของ index
     $postZDIR = array_filter($_POST['var_zdir']);
@@ -121,7 +123,7 @@ if ($_SESSION['user_id'] == "") {
             $item_statement .= " VALUES ('" . $postDetail[$rc] . "'";
             $item_statement .= ",'" . $postLastSuffix[$rc] . "'";
             $item_statement .= ",'" . ($_POST["var_qty"][$rc] * $postLastQty[$rc]) . "'";
-            $item_statement .= ",'normal'";
+            $item_statement .= ",'ปกติ'";
             $item_statement .= ",'" . $_POST['var_adder'] . "'";
             $item_statement .= ") ON DUPLICATE KEY UPDATE `quantity`=`quantity`+" . ($_POST['var_qty'][$rc] * $postLastQty[$rc]) . ";";
         }
@@ -142,7 +144,6 @@ if ($_SESSION['user_id'] == "") {
     $fullStatement .= $item_statement; /* TABLE: item */
     $fullStatement .= "COMMIT;";
 
-    echo '<br/>itemaddrecordstatement= '.$item_add_record_statement."<br/>";
     
     //$item_add จะพิเศษหน่อยตรงที่ มันมี detail เป็น key ทำให้เวลา INSERT INTO ที่เป็ฯ statement ใหญ่ๆ ถ้ามีบางตัวที่ซํ้า มันจะทำให้ตัวอื่นที่ไม่ซํ้า error ไปหมด
 

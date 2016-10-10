@@ -16,7 +16,7 @@ if ($_SESSION['user_id'] == "") {
         <title>ADMIN</title>
         <!-- Bootstrap Core CSS -->
         <?php include 'main_head.php'; ?>
-
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.css"/>
     </head>
 
     <body>
@@ -25,14 +25,14 @@ if ($_SESSION['user_id'] == "") {
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
         include 'navbar.php';
 
-
-        echo '<br/>';
-        echo 'SESSION = ';
-        print_r($_SESSION);
-        echo '<br/>loginResult =<br/>';
-        print_r($loginResult);
-        echo '<br/>POST = <br/>';
-        print_r($_POST);
+        /*
+          echo '<br/>';
+          echo 'SESSION = ';
+          print_r($_SESSION);
+          echo '<br/>loginResult =<br/>';
+          print_r($loginResult);
+          echo '<br/>POST = <br/>';
+          print_r($_POST); */
         ?>
 
         <div class="row">
@@ -51,7 +51,6 @@ if ($_SESSION['user_id'] == "") {
                     </div>
 
 
-                    <?php require("connection.php"); ?>
                     <div class="row">
 
                         <div class="col-md-6">
@@ -103,25 +102,37 @@ if ($_SESSION['user_id'] == "") {
 
                         <div class="col-md-12">
                             <br/>
-                            กำลังแสดงตารางของ: <?= $_SESSION['division']; ?>
+                            <b>กำลังแสดงตารางของ:</b> <?= $_SESSION['division']; ?> 
                             <?php
-                            $initQS = "SELECT `detail`,`quantity`,`suffix`,`type`,`owner` FROM `item` WHERE `owner` IN"
-                                    . " (SELECT `name` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "')";
+                            $initQS = "SELECT `detail`,`quantity`,`suffix`,`type`,`owner` FROM `item` WHERE `owner` LIKE '" . $_SESSION['division'] . "'";
                             $initQry = mysqli_query($connection, $initQS);
+                            //echo "<b>มีทั้งหมด:</b> " . count($initQry['detail']) . " รายการ";
                             ?>
-                            <table>
-                                <?php
-                                while ($rowInit = mysqli_fetch_assoc($initQry)) {
-                                    ?>
-                                <tr align="center">
-                                    <th>รายการ</th>
-                                    <th>จำนวน</th>
-                                    <th>หน่วย</th>
-                                    <th>ประเภท</th>
-                                    <th>ผู้</th>
-                                </tr>
-                                <?php } ?>
-                        </div> <!-- /0col-md-12 -->
+                            <table border="1">
+                                <thead>
+                                    <tr align="center">
+                                        <th>รายการ</th>
+                                        <th>จำนวน</th>
+                                        <th>หน่วย</th>
+                                        <th>ประเภท</th>
+                                        <th>เจ้าของ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    while ($rowInit = mysqli_fetch_assoc($initQry)) {
+                                        ?>
+                                        <tr align="center">
+                                            <td align="left"><a href="show_item.php?detail=<?= $rowInit['detail'] ?>" target="_blank"><?= $rowInit['detail'] ?></a></td>
+                                            <td><?= $rowInit['quantity'] ?></td>
+                                            <td><?= $rowInit['suffix'] ?></td>
+                                            <td><?= $rowInit['type'] ?></td>
+                                            <td><?= $rowInit['owner'] ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div> <!-- /.col-md-12 -->
 
                     </div><!-- Main container -->
                 </div> <!-- /.col-md-10 -->
@@ -131,19 +142,7 @@ if ($_SESSION['user_id'] == "") {
 
 
             <?php include 'main_script.php'; ?>
-
-            <!--Live Search Script -->
-            <script>
-                var $search_rows = $('#search_table tr');
-                $('#search_live').keyup(function () {
-                    var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
-
-                    $search_rows.show().filter(function () {
-                        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
-                        return !~text.indexOf(val);
-                    }).hide();
-                });
-            </script><!-- /Live Search Script -->
+            <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.js"></script>
 
     </body>
 </html>
