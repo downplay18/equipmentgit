@@ -25,14 +25,11 @@ if ($_SESSION['user_id'] == "") {
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
         include 'navbar.php';
 
-
-        echo '<br/>';
+        
         echo 'SESSION = ';
         print_r($_SESSION);
-        echo '<br/>loginResult =<br/>';
-        print_r($loginResult);
         echo '<br/>POST = <br/>';
-        print_r($_POST);
+        print_r($_POST); 
         ?>
 
         <div class="row">
@@ -124,7 +121,7 @@ if ($_SESSION['user_id'] == "") {
                                         ?>
                                         <tr align="center">
                                             <td align="left">
-                                                <a href="show_item.php?detail=<?= $rowInit['detail'] ?>&owner=<?= $rowInit['owner'] ?>" target="_blank">
+                                                <a href="show_item.php?detail=<?= $rowInit['detail'] ?>&owner=<?= $rowInit['owner']?>" target="_blank">
                                                     <?= $rowInit['detail'] ?>
                                                 </a>
                                             </td>

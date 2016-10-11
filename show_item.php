@@ -9,8 +9,8 @@ if ($_SESSION['user_id'] == "") {
     exit();
 }
 
-if ($_SESSION['status'] != "KEY" || $_SESSION['division'] != $_GET['owner']) {
-    echo 'ไม่สามารถดูรายละเอียดได้ ไม่ใช่ผู้อยู่กลุ่มงานนี้ !!!';
+if ($_SESSION['division'] != $_GET['owner']) {
+    echo 'ไม่สามารถดูรายละเอียดได้ เฉพาะพนักงานสังกัด ' . $_SESSION['division'] . ' เท่านั้น!!!';
     exit();
 }
 ?>
@@ -30,18 +30,13 @@ if ($_SESSION['status'] != "KEY" || $_SESSION['division'] != $_GET['owner']) {
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
         include 'navbar.php';
 
-        /*
-          echo '<br/>';
-          echo 'SESSION = ';
-          print_r($_SESSION);
-          echo '<br/>loginResult =<br/>';
-          print_r($loginResult);
-          echo '<br/>POST = <br/>';
-          print_r($_POST); */
+        echo 'SESSION = ';
+        print_r($_SESSION);
+        echo '<br/>POST = <br/>';
+        print_r($_POST); 
         ?>
 
         <div class="row">
-
             <div class="col-md-2 sidebar">
                 <?php include 'sidebar.php'; ?>
             </div>
@@ -52,20 +47,68 @@ if ($_SESSION['status'] != "KEY" || $_SESSION['division'] != $_GET['owner']) {
                 <div class="container-fluid">
 
                     <div class="page-header">
-                        <h2>สืบค้น <small>ระบบสืบค้นและพิมพ์รายงาน</small></h2>
+                        <h2>สืบค้น <small><?= $_GET['detail'] ?></small></h2>
                     </div>
 
+                    <form id="singleSubmitForm" class="form-horizontal" action="show_item_process.php" method="post">
+                        <?php
+                        $itemQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_SESSION['division'] . "'"
+                        . " AND `detail` LIKE '" . $_GET['detail'] . "'";
+                        $itemQry = mysqli_query($connection, $itemQS) or die("itemQry failed: " . mysqli_error($connection));
+                        $itemResult = mysqli_fetch_assoc($itemQry);
+                        ?>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label">ลงบันทึกเบิก: </label>
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="number" class="form-control" name="qty" placeholder="ต้องการเบิกจำนวน" style="size: 10px" required="">
+                                    <div class="input-group-addon">จากคงเหลือ(<?= $itemResult['quantity'] . " " . $itemResult['suffix'] . ")" ?></div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control" name="worker" required="">
+                                    <option>-- เลือกผู้ใช้ --</option>
+                                    <?php
+                                    //list ลูกจ้างในกลุ่มงานเดียวกัน
+                                    $workerQS = "SELECT `wname`,`wdivision` FROM `worker` WHERE `wdivision` LIKE '" . $_SESSION['division'] . "'";
+                                    $workerQry = mysqli_query($connection, $workerQS);
+                                    while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
+                                        ?>
+                                        <option><?php echo $rowWorker['wname'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <select class="form-control" name="site" required="">
+                                        <option>-- นำไปใช้ที่ --</option>
+                                        <?php
+                                        $buildingQS = "SELECT `buildingID`,`listBuilding` FROM `list_building` ORDER BY `buildingID` ASC";
+                                        $buildingQry = mysqli_query($connection, $buildingQS);
+                                        while ($rowBuilding = mysqli_fetch_assoc($buildingQry)) {
+                                            ?>
+                                            <option><?php echo $rowBuilding['listBuilding'] ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="submit" class="btn btn-warning singleSubmitBtn" name="takeSubmit" value="Submit"><span class="glyphicon glyphicon-minus-sign"></span> ลงบันทึกเบิก</button>
+                            </div>
+                        </div>
+                    </form> <!-- /.form-horizontal -->
+
                     <div style="padding: 10px">
-                        <button class="btn btn-default"><span class="glyphicon glyphicon-file"> ดูสลิป</span></button>
-                        <button class="btn btn-default"><span class="glyphicon glyphicon-print"> พิมพ์หน้านี้</span></button>
+                        <button class="btn btn-default"><span class="glyphicon glyphicon-file"></span> ดูสลิป</button>
+                        <button class="btn btn-default"><span class="glyphicon glyphicon-print"></span> พิมพ์หน้านี้</button>
                     </div>
 
                     <div class="col-md-6">
-                        <?php //ADD RECORD
+                        <?php
+                        //ดึง ADD RECORD
                         $addRecordQS = "SELECT `add_detail`,`add_suffix`,`add_qty`,`add_date`,`add_time`,`adder` FROM `item_add_record`"
                                 . " WHERE `add_detail` LIKE '" . $_GET['detail'] . "'";
                         $addRecordQry = mysqli_query($connection, $addRecordQS) or die("addRecordQry failed: " . mysqli_error($connection));
-                        //echo "<b>มีทั้งหมด:</b> " . count($addRecordQry['detail']) . " รายการ";
                         ?>
                         <table border="1">
                             <thead>
@@ -96,11 +139,12 @@ if ($_SESSION['status'] != "KEY" || $_SESSION['division'] != $_GET['owner']) {
                     </div>
 
                     <div class="col-md-6">
-                        <?php //TAKE RECORD
+                        <?php
+//ดึง TAKE RECORD
                         $addRecordQS = "SELECT `take_detail`,`take_suffix`,`take_qty`,`take_date`,`take_time`,`taker` FROM `item_take_record`"
                                 . " WHERE `take_detail` LIKE '" . $_GET['detail'] . "'";
                         $addRecordQry = mysqli_query($connection, $addRecordQS) or die("addRecordQry failed: " . mysqli_error($connection));
-                        //echo "<b>มีทั้งหมด:</b> " . count($addRecordQry['detail']) . " รายการ";
+//echo "<b>มีทั้งหมด:</b> " . count($addRecordQry['detail']) . " รายการ";
                         ?>
                         <table border="1">
                             <thead>
@@ -131,6 +175,14 @@ if ($_SESSION['status'] != "KEY" || $_SESSION['division'] != $_GET['owner']) {
                     </div>
 
                     <?php include 'main_script.php'; ?>
+                    <script> /*PREVENT DOUBLE SUBMIT: ทำให้ปุ่ม submit กดได้ครั้งเดียว ป้องกับปัญหาเนต lag แล้ว user กดเบิ้ล มันจะทำให้ส่งค่า 2 เท่า */
+                        $(document).ready(function () {
+                            $("#singleSubmitForm").submit(function () {
+                                $("#singleSubmitBtn").attr("disabled", true);
+                                return true;
+                            });
+                        });
+                    </script>
 
                     </body>
                     </html>
