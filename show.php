@@ -8,6 +8,11 @@ if ($_SESSION['user_id'] == "") {
     header("Location: $root_url/index.php", true, 302);
     exit();
 }
+
+unset($_SESSION['detail']);
+unset($_SESSION['suffix']);
+unset($_SESSION['owner']);
+
 ?>
 
 <html>
@@ -96,17 +101,16 @@ if ($_SESSION['user_id'] == "") {
                                 </span>
                             </div> <!-- /input-group -->
                         </div> <!-- /.col-md-6 -->
-
+                        
                         <div class="col-md-12">
                             <br/>
                             <b>กำลังแสดงตารางของ:</b> <?= $_SESSION['division']; ?> 
-                            <?php
-                            //$initQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_SESSION['division'] . "'";
+                            <?php //ดึง item
                             $initQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item`";
                             $initQry = mysqli_query($connection, $initQS);
                             //echo "<b>มีทั้งหมด:</b> " . count($initQry['detail']) . " รายการ";
                             ?>
-                            <table border="1">
+                            <table class="table table-bordered table-condensed table-striped table-hover">
                                 <thead>
                                     <tr align="center">
                                         <th>รายการ</th>
@@ -121,7 +125,7 @@ if ($_SESSION['user_id'] == "") {
                                         ?>
                                         <tr align="center">
                                             <td align="left">
-                                                <a href="show_item.php?detail=<?= $rowInit['detail'] ?>&owner=<?= $rowInit['owner']?>" target="_blank">
+                                                <a href="show_item.php?detail=<?= $rowInit['detail'] ?>&owner=<?= $rowInit['owner']?>&suffix=<?= $rowInit['suffix'] ?>" target="_blank">
                                                     <?= $rowInit['detail'] ?>
                                                 </a>
                                             </td>

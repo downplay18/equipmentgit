@@ -9,9 +9,10 @@ if ($_SESSION['user_id'] == "") {
     exit();
 }
 
-if ($_SESSION['division'] != $_GET['owner']) {
-    echo 'ไม่สามารถดูรายละเอียดได้ เฉพาะพนักงานสังกัด ' . $_SESSION['division'] . ' เท่านั้น!!!';
-    exit();
+if (isset($_GET['detail'])) {
+    $_SESSION['detail'] = $_GET['detail'];
+    $_SESSION['owner'] = $_GET['owner'];
+    $_SESSION['suffix'] = $_GET['suffix'];
 }
 ?>
 
@@ -33,7 +34,7 @@ if ($_SESSION['division'] != $_GET['owner']) {
         echo 'SESSION = ';
         print_r($_SESSION);
         echo '<br/>POST = <br/>';
-        print_r($_POST); 
+        print_r($_POST);
         ?>
 
         <div class="row">
@@ -47,57 +48,68 @@ if ($_SESSION['division'] != $_GET['owner']) {
                 <div class="container-fluid">
 
                     <div class="page-header">
-                        <h2>สืบค้น <small><?= $_GET['detail'] ?></small></h2>
+                        <h2>สืบค้น <small><?= $_GET['detail'] ?> ของ<?= $_GET['owner'] ?></small></h2>
                     </div>
 
-                    <form id="singleSubmitForm" class="form-horizontal" action="show_item_process.php" method="post">
-                        <?php
-                        $itemQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_SESSION['division'] . "'"
-                        . " AND `detail` LIKE '" . $_GET['detail'] . "'";
-                        $itemQry = mysqli_query($connection, $itemQS) or die("itemQry failed: " . mysqli_error($connection));
-                        $itemResult = mysqli_fetch_assoc($itemQry);
+                    <?php
+                    if ($_SESSION['status'] != "KEY") { //ถ้ากดเข้ามาดูของที่ไม่ใช่กลุ่มงานตัวเอง
+                        $takeRowMsg = "คุณไม่สามารถแก้ไขรายการนี้ได้ เนื่องจากคุณไม่ใช่<u>ผู้ดูแลประจำกลุ่มงาน</u>";
+                        if ($_SESSION['division'] != $_SESSION['owner']) {
+                            $takeRowMsg .= " และ รายการนี้เป็นของ <u>" . $_SESSION['owner'] . "</u><br/>";
+                        }
+                        echo '<div class="alert alert-warning">';
+                        echo $takeRowMsg;
+                        echo '</div>';
+                    } else {
                         ?>
-                        <div class="form-group">
-                            <label class="col-md-2 control-label">ลงบันทึกเบิก: </label>
-                            <div class="col-md-3">
-                                <div class="input-group">
-                                    <input type="number" class="form-control" name="qty" placeholder="ต้องการเบิกจำนวน" style="size: 10px" required="">
-                                    <div class="input-group-addon">จากคงเหลือ(<?= $itemResult['quantity'] . " " . $itemResult['suffix'] . ")" ?></div>
+                        <form id="singleSubmitForm" class="form-horizontal" action="show_item_process.php" method="post">
+                            <?php
+                            $itemQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_SESSION['division'] . "'"
+                                    . " AND `detail` LIKE '" . $_GET['detail'] . "'";
+                            $itemQry = mysqli_query($connection, $itemQS) or die("itemQry failed: " . mysqli_error($connection));
+                            $itemResult = mysqli_fetch_assoc($itemQry);
+                            ?>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">ลงบันทึกเบิก: </label>
+                                <div class="col-md-3">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" name="qty" placeholder="ต้องการเบิกจำนวน" style="size: 10px" required="">
+                                        <div class="input-group-addon">จากคงเหลือ(<?= $itemResult['quantity'] . " " . $itemResult['suffix'] . ")" ?></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-2">
-                                <select class="form-control" name="worker" required="">
-                                    <option>-- เลือกผู้ใช้ --</option>
-                                    <?php
-                                    //list ลูกจ้างในกลุ่มงานเดียวกัน
-                                    $workerQS = "SELECT `wname`,`wdivision` FROM `worker` WHERE `wdivision` LIKE '" . $_SESSION['division'] . "'";
-                                    $workerQry = mysqli_query($connection, $workerQS);
-                                    while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
-                                        ?>
-                                        <option><?php echo $rowWorker['wname'] ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <select class="form-control" name="site" required="">
-                                        <option>-- นำไปใช้ที่ --</option>
+                                <div class="col-md-2">
+                                    <select class="form-control" name="worker" required="">
+                                        <option>-- เลือกผู้ใช้ --</option>
                                         <?php
-                                        $buildingQS = "SELECT `buildingID`,`listBuilding` FROM `list_building` ORDER BY `buildingID` ASC";
-                                        $buildingQry = mysqli_query($connection, $buildingQS);
-                                        while ($rowBuilding = mysqli_fetch_assoc($buildingQry)) {
+                                        //list ลูกจ้างในกลุ่มงานเดียวกัน
+                                        $workerQS = "SELECT `wname`,`wdivision` FROM `worker` WHERE `wdivision` LIKE '" . $_SESSION['division'] . "'";
+                                        $workerQry = mysqli_query($connection, $workerQS);
+                                        while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
                                             ?>
-                                            <option><?php echo $rowBuilding['listBuilding'] ?></option>
+                                            <option><?php echo $rowWorker['wname'] ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <select class="form-control" name="site" required="">
+                                            <option>-- นำไปใช้ที่ --</option>
+                                            <?php
+                                            $buildingQS = "SELECT `buildingID`,`listBuilding` FROM `list_building` ORDER BY `buildingID` ASC";
+                                            $buildingQry = mysqli_query($connection, $buildingQS);
+                                            while ($rowBuilding = mysqli_fetch_assoc($buildingQry)) {
+                                                ?>
+                                                <option><?php echo $rowBuilding['listBuilding'] ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <button type="submit" class="btn btn-warning singleSubmitBtn" name="takeSubmit" value="Submit"><span class="glyphicon glyphicon-minus-sign"></span> ลงบันทึกเบิก</button>
+                                </div>
                             </div>
-                            <div class="col-md-1">
-                                <button type="submit" class="btn btn-warning singleSubmitBtn" name="takeSubmit" value="Submit"><span class="glyphicon glyphicon-minus-sign"></span> ลงบันทึกเบิก</button>
-                            </div>
-                        </div>
-                    </form> <!-- /.form-horizontal -->
-
+                        </form> <!-- /.form-horizontal -->
+                    <?php } ?>
                     <div style="padding: 10px">
                         <button class="btn btn-default"><span class="glyphicon glyphicon-file"></span> ดูสลิป</button>
                         <button class="btn btn-default"><span class="glyphicon glyphicon-print"></span> พิมพ์หน้านี้</button>
@@ -110,7 +122,7 @@ if ($_SESSION['division'] != $_GET['owner']) {
                                 . " WHERE `add_detail` LIKE '" . $_GET['detail'] . "'";
                         $addRecordQry = mysqli_query($connection, $addRecordQS) or die("addRecordQry failed: " . mysqli_error($connection));
                         ?>
-                        <table border="1">
+                        <table class="table table-bordered table-hover table-condensed table-striped">
                             <thead>
                                 <tr align="center">
                                     <th>รายการ</th>
