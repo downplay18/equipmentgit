@@ -48,24 +48,28 @@ if (isset($_GET['detail'])) {
                 <div class="container-fluid">
 
                     <div class="page-header">
-                        <h2>สืบค้น <small><?= $_GET['detail'] ?> ของ<?= $_GET['owner'] ?></small></h2>
+                        <h2>สืบค้น <small><?= $_SESSION['detail'] ?> ของ<?= $_SESSION['owner'] ?></small></h2>
                     </div>
 
                     <?php
-                    if ($_SESSION['status'] != "KEY") { //ถ้ากดเข้ามาดูของที่ไม่ใช่กลุ่มงานตัวเอง
-                        $takeRowMsg = "คุณไม่สามารถแก้ไขรายการนี้ได้ เนื่องจากคุณไม่ใช่<u>ผู้ดูแลประจำกลุ่มงาน</u>";
+                    $takeRowMsg = "";
+                    if ($_SESSION['status'] != "KEY" || $_SESSION['division'] != $_SESSION['owner']) { //ถ้ากดเข้ามาดูของที่ไม่ใช่กลุ่มงานตัวเอง
+                        $takeRowMsg = "ไม่สามารถแก้ไขรายการนี้ได้ เนื่องจาก";
+                        if ($_SESSION['status'] != "KEY") {
+                            $takeRowMsg .= " (คุณไม่ใช่ผู้ดูแลประจำกลุ่มงาน)";
+                        }
                         if ($_SESSION['division'] != $_SESSION['owner']) {
-                            $takeRowMsg .= " และ รายการนี้เป็นของ <u>" . $_SESSION['owner'] . "</u><br/>";
+                            $takeRowMsg .= " (รายการนี้เป็นของ " . $_SESSION['owner'] . ")<br/>";
                         }
                         echo '<div class="alert alert-warning">';
                         echo $takeRowMsg;
                         echo '</div>';
                     } else {
                         ?>
-                        <form id="singleSubmitForm" class="form-horizontal" action="show_item_process.php" method="post">
+                        <form id="singleSubmitForm" class="form-horizontal" action="show_take_process.php" method="post">
                             <?php
                             $itemQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_SESSION['division'] . "'"
-                                    . " AND `detail` LIKE '" . $_GET['detail'] . "'";
+                                    . " AND `detail` LIKE '" . $_SESSION['detail'] . "'";
                             $itemQry = mysqli_query($connection, $itemQS) or die("itemQry failed: " . mysqli_error($connection));
                             $itemResult = mysqli_fetch_assoc($itemQry);
                             ?>
@@ -82,7 +86,7 @@ if (isset($_GET['detail'])) {
                                         <option>-- เลือกผู้ใช้ --</option>
                                         <?php
                                         //list ลูกจ้างในกลุ่มงานเดียวกัน
-                                        $workerQS = "SELECT `wname`,`wdivision` FROM `worker` WHERE `wdivision` LIKE '" . $_SESSION['division'] . "'";
+                                        $workerQS = "SELECT `wname`,`wdivision` FROM `worker` WHERE `wdivision` LIKE '" . $_SESSION['division'] . "' ORDER BY `wname` ASC";
                                         $workerQry = mysqli_query($connection, $workerQS);
                                         while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
                                             ?>
@@ -119,7 +123,7 @@ if (isset($_GET['detail'])) {
                         <?php
                         //ดึง ADD RECORD
                         $addRecordQS = "SELECT `add_detail`,`add_suffix`,`add_qty`,`add_date`,`add_time`,`adder` FROM `item_add_record`"
-                                . " WHERE `add_detail` LIKE '" . $_GET['detail'] . "'";
+                                . " WHERE `add_detail` LIKE '" . $_SESSION['detail'] . "'";
                         $addRecordQry = mysqli_query($connection, $addRecordQS) or die("addRecordQry failed: " . mysqli_error($connection));
                         ?>
                         <table class="table table-bordered table-hover table-condensed table-striped">
@@ -152,11 +156,11 @@ if (isset($_GET['detail'])) {
 
                     <div class="col-md-6">
                         <?php
-//ดึง TAKE RECORD
+                        //ดึง TAKE RECORD
                         $addRecordQS = "SELECT `take_detail`,`take_suffix`,`take_qty`,`take_date`,`take_time`,`taker` FROM `item_take_record`"
-                                . " WHERE `take_detail` LIKE '" . $_GET['detail'] . "'";
+                                . " WHERE `take_detail` LIKE '" . $_SESSION['detail'] . "'";
                         $addRecordQry = mysqli_query($connection, $addRecordQS) or die("addRecordQry failed: " . mysqli_error($connection));
-//echo "<b>มีทั้งหมด:</b> " . count($addRecordQry['detail']) . " รายการ";
+                        //echo "<b>มีทั้งหมด:</b> " . count($addRecordQry['detail']) . " รายการ";
                         ?>
                         <table border="1">
                             <thead>

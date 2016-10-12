@@ -23,7 +23,7 @@ print_r($_POST);
 <?php
 
 //ดึง จาก table:item
-$itemQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_SESSION['division'] . "'"
+$itemQS = "SELECT `iid`,`detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_SESSION['division'] . "'"
         . " AND `detail` LIKE '" . $_SESSION['detail'] . "'";
 $itemQry = mysqli_query($connection, $itemQS) or die("itemQry failed: " . mysqli_error($connection));
 $itemResult = mysqli_fetch_assoc($itemQry);
@@ -42,8 +42,8 @@ $itemTakeRecordQS = "INSERT INTO `item_take_record` (`take_detail`,`take_qty`,`t
 $itemTakeRecordQry = mysqli_query($connection, $itemTakeRecordQS) or die("itemTakeRecordQry failed: " . mysqli_error($connection));
 
 //หักของออกจาก `item`
-$itemTakeQS = "INSERT INTO `item` (`detail`,`quantity`,`suffix`) VALUES ('" . $itemResult['detail'] . "','" . $itemResult['quantity'] . "','" . $itemResult['suffix'] . "') ON DUPLICATE KEY UPDATE `quantity`=`quantity`-" . $_POST['qty'] . ";";
-$itemQry = mysqli_query($connection, $itemTakeQS) or die("itemTakeQS failed: " . mysqli_error($connection));
+$itemTakeQS = "INSERT INTO `item` (`iid`,`quantity`) VALUES ('". $itemResult['iid'] ."','" . $itemResult['quantity'] . "') ON DUPLICATE KEY UPDATE `quantity`=`quantity`-" . $_POST['qty'] . ";";
+$itemTakeQry = mysqli_query($connection, $itemTakeQS) or die("itemTakeQS failed: " . mysqli_error($connection));
 
 
 /*
@@ -52,8 +52,8 @@ $itemQry = mysqli_query($connection, $itemTakeQS) or die("itemTakeQS failed: " .
   echo "<br>itemTakeRecordQS=<br>";
   print_r($itemTakeRecordQS);
   echo "<br>itemTakeQS=<br>";
-  print_r($itemTakeQS);
- */
+  print_r($itemTakeQS); */
+ 
 
 
 

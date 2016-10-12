@@ -12,7 +12,38 @@ if ($_SESSION['user_id'] == "") {
 unset($_SESSION['detail']);
 unset($_SESSION['suffix']);
 unset($_SESSION['owner']);
+?>
 
+<?php
+//สร้าง Query Statement สำหรับแสดงตารางหลักของหน้านี้
+//error_reporting(0);
+$divSiteQS = "";
+$tableHeader = "";
+$tableData = "";
+$qryMsg = "";
+if (isset($_POST['submitBtn'])) {
+    if ($_POST['divName'] != "-- เลือกกลุ่มงาน --" && $_POST['siteName'] != "-- เลือกสถานที่ใช้งาน --") {
+        $divSiteQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_POST['divName'] . "'"
+                . " AND `site`";
+        $qryMsg = $_POST['divName'] . ", " . $_POST['siteName'];
+    } elseif ($_POST['divName'] != "-- เลือกกลุ่มงาน --") {
+        $divSiteQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_POST['divName'] . "'";
+        $tableHeader = array("รายการ", "จำนวน", "หน่วย", "เจ้าของ");
+        $tableData = array("detail", "quantity", "suffix", "owner");
+        $qryMsg = $_POST['divName'];
+    } elseif ($_POST['siteName'] != "-- เลือกสถานที่ใช้งาน --") {
+        $divSiteQS = "SELECT * FROM `item_take_record` WHERE `site` LIKE '" . $_POST['siteName'] . "'";
+        //. " GROUP BY `take_detail`";
+        $tableHeader = array("รายการ", "จำนวน", "หน่วย", "ใช้ที่");
+        $tableData = array("take_detail", "take_qty", "take_suffix", "site");
+        $qryMsg = $_POST['siteName'];
+    }
+} else {
+    $divSiteQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item`";
+    $tableHeader = array("รายการ", "จำนวน", "หน่วย", "เจ้าของ");
+    $tableData = array("detail", "quantity", "suffix", "owner");
+    $qryMsg = "รายการทั้งหมด";
+}
 ?>
 
 <html>
@@ -30,11 +61,11 @@ unset($_SESSION['owner']);
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
         include 'navbar.php';
 
-        
+
         echo 'SESSION = ';
         print_r($_SESSION);
         echo '<br/>POST = <br/>';
-        print_r($_POST); 
+        print_r($_POST);
         ?>
 
         <div class="row">
@@ -54,84 +85,94 @@ unset($_SESSION['owner']);
 
 
                     <div class="row">
+                        <!-- แถว แสดง dropdown กลุ่มงาน+site -->
+                        <div class="col-md-12">
 
-                        <div class="col-md-6">
-                            <label for="selDiv">ค้นหาโดยกลุ่มงาน</label>
-                            <div class="input-group" id="selDiv">
-                                <select class="form-control">
-                                    <option>-- เลือกกลุ่มงาน --</option>
-                                    <?php
-                                    //เรียก list กลุ่มงานทั้งหมด
-                                    $divQS = "SELECT `listDivision` FROM `list_division`";
-                                    $divQry = mysqli_query($connection, $divQS);
-                                    while ($rowDiv = mysqli_fetch_assoc($divQry)) {
-                                        ?>
-                                        <option 
+                            <form action="" method="post">
+                                <div class="col-md-3">
+                                    <select id="selDiv" class="form-control" name="divName">
+                                        <option>-- เลือกกลุ่มงาน --</option>
                                         <?php
-                                        //เลือกกลุ่มงานตัวเองไว้โดยอัตโนมัติ
-                                        if ($rowDiv['listDivision'] == $_SESSION['division']) {
-                                            echo 'selected';
-                                        }
-                                        ?>>
-                                            <?php echo $rowDiv['listDivision']; ?></option>
-                                    <?php } ?>
-                                </select>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-info" type="button" autofocus="" ><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
-                                </span>
-                            </div> <!-- /input-group -->
-                        </div> <!-- /.col-md-6 -->
+                                        //เรียก list กลุ่มงานทั้งหมด
+                                        $divQS = "SELECT `listDivision` FROM `list_division` ORDER BY `divisionID` ASC";
+                                        $divQry = mysqli_query($connection, $divQS);
+                                        while ($rowDiv = mysqli_fetch_assoc($divQry)) {
+                                            ?>
+                                            <option 
+                                            <?php
+                                            //เลือกกลุ่มงานตัวเองไว้โดยอัตโนมัติ
+                                            if ($rowDiv['listDivision'] == $_SESSION['division']) {
+                                                echo 'selected';
+                                            }
+                                            ?>>
+                                                <?php echo $rowDiv['listDivision']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div> <!-- /.col-md-3 -->
+                                <div class="col-md-3">
+                                    <select id="selBuilding" class="form-control" name="siteName">
+                                        <option>-- เลือกสถานที่ใช้งาน --</option>
+                                        <?php
+                                        //เรียก list ตุกทั้งหมด
+                                        $siteQS = "SELECT `listBuilding` FROM `list_building` ORDER BY `buildingID` ASC";
+                                        $siteQry = mysqli_query($connection, $siteQS);
+                                        while ($rowSite = mysqli_fetch_assoc($siteQry)) {
+                                            ?>
+                                            <option><?= $rowSite['listBuilding']; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div> <!-- /.col-md-3 -->
+                                <div class="col-md-1">
+                                    <button class="btn btn-success" type="submit" name="submitBtn" value="submit" autofocus=""><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-default" type="submit" name="SubmitAll" value="submit"><span class="glyphicon glyphicon-list"></span> ทั้งหมด</button>
+                                </div>
+                            </form>
 
-                        <div class="col-md-6">
-                            <label for="selBuilding">ค้นหาโดยสถานที่ใช้งาน</label>
-                            <div class="input-group" id="selBuilding">
-                                <select class="form-control">
-                                    <option>-- เลือกสถานที่ใช้งาน --</option>
-                                    <?php
-                                    //เรียก list ตุกทั้งหมด
-                                    $siteQS = "SELECT `listBuilding` FROM `list_building`";
-                                    $siteQry = mysqli_query($connection, $siteQS);
-                                    while ($rowSite = mysqli_fetch_assoc($siteQry)) {
-                                        ?>
-                                        <option><?= $rowSite['listBuilding']; ?></option>
-                                    <?php } ?>
-                                </select>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
-                                </span>
-                            </div> <!-- /input-group -->
-                        </div> <!-- /.col-md-6 -->
-                        
+                        </div> <!-- /.col-md-12 -->
+
+
+
+
+
+
+
+
                         <div class="col-md-12">
                             <br/>
-                            <b>กำลังแสดงตารางของ:</b> <?= $_SESSION['division']; ?> 
-                            <?php //ดึง item
-                            $initQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item`";
-                            $initQry = mysqli_query($connection, $initQS);
-                            //echo "<b>มีทั้งหมด:</b> " . count($initQry['detail']) . " รายการ";
-                            ?>
+                            <b>กำลังแสดงตารางของ:</b> <?= $qryMsg; ?> 
                             <table class="table table-bordered table-condensed table-striped table-hover">
                                 <thead>
                                     <tr align="center">
-                                        <th>รายการ</th>
-                                        <th>จำนวน</th>
-                                        <th>หน่วย</th>
-                                        <th>เจ้าของ</th>
+                                        <?php
+                                        foreach ($tableHeader as $value) {
+                                            echo "<th>" . $value . "</th>";
+                                        }
+                                        ?>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    while ($rowInit = mysqli_fetch_assoc($initQry)) {
+                                    echo '<br/>' . $divSiteQS;
+                                    $divSiteQry = mysqli_query($connection, $divSiteQS);
+                                    while ($rowDivSite = mysqli_fetch_assoc($divSiteQry)) {
                                         ?>
                                         <tr align="center">
                                             <td align="left">
-                                                <a href="show_item.php?detail=<?= $rowInit['detail'] ?>&owner=<?= $rowInit['owner']?>&suffix=<?= $rowInit['suffix'] ?>" target="_blank">
-                                                    <?= $rowInit['detail'] ?>
+                                                <a href="show_item.php?detail=<?= $rowDivSite['detail'] ?>&owner=<?= $rowDivSite['owner'] ?>&suffix=<?= $rowDivSite['suffix'] ?>" target="_blank">
+                                                    <?= $rowDivSite[$tableData[0]] ?>
                                                 </a>
                                             </td>
-                                            <td><?= $rowInit['quantity'] ?></td>
-                                            <td><?= $rowInit['suffix'] ?></td>
-                                            <td><?= $rowInit['owner'] ?></td>
+                                            <td><?= $rowDivSite[$tableData[1]] ?></td>
+                                            <td><?= $rowDivSite[$tableData[2]] ?></td>
+                                            <td><?= $rowDivSite[$tableData[3]] ?></td>
+                                            <?php if (isset($rowDivSite[$tableData[4]])) { ?>
+                                                <td><?= $rowDivSite[$tableData[4]] ?></td>
+                                            <?php } ?>
+                                            <?php if (isset($rowDivSite[$tableData[5]])) { ?>
+                                                <td><?= $rowDivSite[$tableData[5]] ?></td>
+                                            <?php } ?>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
