@@ -18,7 +18,11 @@ if (isset($_SESSION['user_id'])) {
     } else {
         header("location:_login_user.php");
     }
+} else {
+    header("location:index.php");
 }
+
+
 
 /* =====_login_connection===== */
 /* รับ $_POST มาจาก navbar_unauthen.php */
