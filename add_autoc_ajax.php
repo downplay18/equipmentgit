@@ -5,7 +5,7 @@ require_once 'connection.php';
 if ($_POST['type'] == 'item_table') {
     $row_num = $_POST['row_num'];
     $name = $_POST['name_startsWith'];
-    $query = "SELECT `detail`,`suffix` FROM `item` WHERE `detail` LIKE '%" . $name . "%' AND `owner` LIKE '". $_POST['division'] ."'";
+    $query = "SELECT `detail`,`suffix` FROM `item` WHERE `detail` LIKE '%" . $name . "%' AND `owner` LIKE '". $_SESSION['division'] ."'";
     $result = mysqli_query($connection, $query);
     $data = array();
     while ($row = mysqli_fetch_assoc($result)) {
