@@ -123,7 +123,8 @@ if (isset($_GET['detail'])) {
                         <?php
                         //ดึง ADD RECORD
                         $addRecordQS = "SELECT `add_detail`,`add_suffix`,`add_qty`,`add_date`,`add_time`,`adder` FROM `item_add_record`"
-                                . " WHERE `add_detail` LIKE '" . $_SESSION['detail'] . "'";
+                                . " WHERE `add_detail` LIKE '" . $_SESSION['detail'] . "'"
+                                . " AND `adder` LIKE '". $_SESSION['division'] ."'";
                         $addRecordQry = mysqli_query($connection, $addRecordQS) or die("addRecordQry failed: " . mysqli_error($connection));
                         ?>
                         <table class="table table-bordered table-hover table-condensed table-striped">

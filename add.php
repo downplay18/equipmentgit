@@ -30,6 +30,12 @@ if($_SESSION['status']!="KEY") {
         print_r($loginResult);
         echo '<br/>POST = <br/>';
         print_r($_POST); 
+        
+        $test = array(x,'y',z);
+        $test1 = array();
+        echo '<br>test1='.isset($test1); 
+        echo '<br>test1='.isset($test1[0]); 
+        echo '<br>test='.$test[1]; 
         ?>
 
 
@@ -49,7 +55,7 @@ if($_SESSION['status']!="KEY") {
                     </div>
 
                     <!-- form and submit button -->
-                    <form id="mainForm" action="add_confirm.php" method="post">
+                    <form id="mainForm" action="add_process.php" method="post">
 
                         <!-- เลขที่ใบเสร็จ+วันที่+กลุ่มงานเข้าของรายการ -->
                         <div class="col-md-12">

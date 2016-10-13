@@ -60,8 +60,9 @@
                             <li><a href="<?= $root_url ?>/_logout.php"><span class="glyphicon glyphicon-log-out"></span> ออกจากระบบ</a></li>
                         </ul>
                     </li>
-                <?php } ?>
-            </div> <!-- /.navbar-right -->
+                </div> <!-- /.navbar-right -->
+            <?php } ?>
+
 
             <div class="navbar-form navbar-left">
 
