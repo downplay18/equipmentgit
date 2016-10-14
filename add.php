@@ -1,14 +1,15 @@
 <?php
 //var_dump($_SESSION);
 session_start();
+//error_reporting(0);
 require_once 'connection.php';
-
 include 'root_url.php';
+
 if ($_SESSION['user_id'] == "") {
     header("Location: $root_url/index.php", true, 302);
     exit();
 }
-if($_SESSION['status']!="KEY") {
+if ($_SESSION['status'] != "KEY") {
     header("Location: $root_url/index.php", true, 302);
 }
 ?>
@@ -22,20 +23,20 @@ if($_SESSION['status']!="KEY") {
 
         <?php
         include("navbar.php");
-        
+
         echo '<br/>';
         echo 'SESSION = ';
         print_r($_SESSION);
         echo '<br/>loginResult =<br/>';
         print_r($loginResult);
         echo '<br/>POST = <br/>';
-        print_r($_POST); 
-        
-        $test = array(x,'y',z);
-        $test1 = array();
-        echo '<br>test1='.isset($test1); 
-        echo '<br>test1='.isset($test1[0]); 
-        echo '<br>test='.$test[1]; 
+        print_r($_POST);
+        /*
+          $test = array(x,'y',z);
+          $test1 = array();
+          echo '<br>test1='.isset($test1);
+          echo '<br>test1='.isset($test1[0]);
+          echo '<br>test='.$test[1]; */
         ?>
 
 
@@ -212,13 +213,9 @@ if($_SESSION['status']!="KEY") {
 
 
 
-
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery-1.12.2.min.js" type="text/javascript"></script>
-
+        <?php include 'main_script.php'; ?>
         <link  href="css/jquery-ui-1.12.0.css" rel="stylesheet">
         <script src="js/jquery-ui.min.js" type="text/javascript"></script>
-
         <script src="js/autocWithAddRow.js" type="text/javascript"></script>
 
         <script> /*PREVENT DOUBLE SUBMIT: ทำให้ปุ่ม submit กดได้ครั้งเดียว ป้องกับปัญหาเนต lag แล้ว user กดเบิ้ล มันจะทำให้ส่งค่า 2 เท่า */
