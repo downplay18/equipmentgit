@@ -66,7 +66,7 @@ if (isset($_POST['submitBtn'])) {
     $divSiteQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item`";
     $tableHeader = array("รายการ", "จำนวน", "หน่วย", "เจ้าของ");
     $tableData = array("detail", "quantity", "suffix", "owner");
-    $qryMsg = "รายการทั้งหมด";
+    $qryMsg = "แสดงรายการทั้งหมด";
     $_SESSION['lastDiv'] = "-- เลือกกลุ่มงาน --";
     $_SESSION['lastSite'] = "-- เลือกสถานที่ใช้งาน --";
 }
