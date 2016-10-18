@@ -214,8 +214,6 @@ if ($_SESSION['status'] != "KEY") {
 
 
         <?php include 'main_script.php'; ?>
-        <link  href="css/jquery-ui-1.12.0.css" rel="stylesheet">
-        <script src="js/jquery-ui.min.js" type="text/javascript"></script>
         <script src="js/autocWithAddRow.js" type="text/javascript"></script>
 
         <script> /*PREVENT DOUBLE SUBMIT: ทำให้ปุ่ม submit กดได้ครั้งเดียว ป้องกับปัญหาเนต lag แล้ว user กดเบิ้ล มันจะทำให้ส่งค่า 2 เท่า */
