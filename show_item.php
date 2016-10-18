@@ -19,11 +19,7 @@ if (isset($_GET['detail'])) {
 
 <?php 
 //เข้ามาครั้งแรก ยังไม่กดปุ่มใดๆ
-$addTakeQS = "SELECT * FROM `item` WHERE `detail` LIKE '" . $_SESSION['detail'] . "'";
-$addTakeSize = 4;
-$addTakeHeader = array('รายการ', 'จำนวน', 'หน่วย', 'เจ้าของ');
-$addTakeData = array('detail', 'quantity', 'suffix', 'owner');
-$addTakeMsg = "รายการคงเหลือปัจจุบัน";
+$_POST['showItemBtn'] = "FIRT TIME VISIT";
 ?>
 
 <?php
