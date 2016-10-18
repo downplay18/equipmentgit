@@ -1,7 +1,7 @@
 <?php
 //var_dump($_SESSION);
 session_start();
-//error_reporting(0);
+error_reporting(0);
 require_once 'connection.php';
 include 'root_url.php';
 
@@ -14,6 +14,43 @@ if (isset($_GET['detail'])) {
     $_SESSION['detail'] = $_GET['detail'];
     $_SESSION['owner'] = $_GET['owner'];
     $_SESSION['suffix'] = $_GET['suffix'];
+}
+?>
+
+<?php 
+//เข้ามาครั้งแรก ยังไม่กดปุ่มใดๆ
+$addTakeQS = "SELECT * FROM `item` WHERE `detail` LIKE '" . $_SESSION['detail'] . "'";
+$addTakeSize = 4;
+$addTakeHeader = array('รายการ', 'จำนวน', 'หน่วย', 'เจ้าของ');
+$addTakeData = array('detail', 'quantity', 'suffix', 'owner');
+$addTakeMsg = "รายการคงเหลือปัจจุบัน";
+?>
+
+<?php
+if (isset($_POST['showAddBtn'])) {
+    $addTakeQS = "SELECT * FROM `item_add_record` WHERE `add_detail` LIKE '" . $_SESSION['detail'] . "'"
+            . " AND `adder` LIKE '" . $_SESSION['owner'] . "'"; //มันแค่เช็ค add ใช้แค่ owner ไม่ใช่ division
+    $addTakeSize = 6;
+    $addTakeHeader = array('รายการ', 'จำนวน', 'หน่วย', 'วันที่', 'เวลา', 'ผู้ลงบันทึกเพิ่ม');
+    $addTakeData = array('add_detail', 'add_qty', 'add_suffix', 'add_date', 'add_time', 'adder');
+    $addTakeMsg = "รายการเพิ่มทั้งหมด";
+} elseif (isset($_POST['showTakeBtn'])) {
+    $addTakeQS = "SELECT * FROM `item_take_record` WHERE `take_detail` LIKE '" . $_SESSION['detail'] . "'"
+            . " AND `taker` LIKE '" . $_SESSION['owner'] . "'";
+    $addTakeSize = 8;
+    $addTakeHeader = array('รายการ', 'จำนวน', 'หน่วย', 'วันที่', 'เวลา', 'ผู้ลงบันทึกเบิก', 'ผู้ใช้งาน', 'สถานที่ใช้งาน');
+    $addTakeData = array('take_detail', 'take_qty', 'take_suffix', 'take_date', 'take_time', 'taker', 'worker', 'site');
+    $addTakeMsg = "รายการเบิกใช้งานทั้งหมด";
+} elseif (isset($_POST['showItemBtn'])) {
+    $addTakeQS = "SELECT * FROM `item` WHERE `detail` LIKE '" . $_SESSION['detail'] . "'";
+    $addTakeSize = 4;
+    $addTakeHeader = array('รายการ', 'จำนวน', 'หน่วย', 'เจ้าของ');
+    $addTakeData = array('detail', 'quantity', 'suffix', 'owner');
+    $addTakeMsg = "รายการคงเหลือปัจจุบัน";
+} elseif (isset($_POST['slipBtn'])) {
+    
+} elseif (isset($_POST['printBtn'])) {
+    
 }
 ?>
 
@@ -52,7 +89,9 @@ if (isset($_GET['detail'])) {
                         <h2>สืบค้น <small><?= $_SESSION['detail'] ?> ของ<?= $_SESSION['owner'] ?></small></h2>
                     </div>
 
+
                     <?php
+                    //โค้ดใน tag PHP เป็นของแถวที่ใช้ take
                     $takeRowMsg = "";
                     if ($_SESSION['status'] != "KEY" || $_SESSION['division'] != $_SESSION['owner']) { //ถ้ากดเข้ามาดูของที่ไม่ใช่กลุ่มงานตัวเอง
                         $takeRowMsg = "ไม่สามารถแก้ไขรายการนี้ได้ เนื่องจาก";
@@ -74,8 +113,8 @@ if (isset($_GET['detail'])) {
                             $itemQry = mysqli_query($connection, $itemQS) or die("itemQry failed: " . mysqli_error($connection));
                             $itemResult = mysqli_fetch_assoc($itemQry);
                             ?>
+                            <label class="col-md-2 control-label">ลงบันทึกเบิก: </label>
                             <div class="form-group">
-                                <label class="col-md-2 control-label">ลงบันทึกเบิก: </label>
                                 <div class="col-md-3">
                                     <div class="input-group">
                                         <input type="number" class="form-control" name="qty" placeholder="ต้องการเบิกจำนวน" style="size: 10px" required="">
@@ -83,7 +122,7 @@ if (isset($_GET['detail'])) {
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <select class="form-control" name="worker" required="">
+                                    <select id="selWorker" class="form-control" name="worker" required="">
                                         <option>-- เลือกผู้ใช้ --</option>
                                         <?php
                                         //list ลูกจ้างในกลุ่มงานเดียวกัน
@@ -91,8 +130,12 @@ if (isset($_GET['detail'])) {
                                         $workerQry = mysqli_query($connection, $workerQS);
                                         while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
                                             ?>
-                                            <option><?php echo $rowWorker['wname'] ?></option>
-                                        <?php } ?>
+                                            <option <?php
+                                            if ($rowWorker['wname'] == $_SESSION['lastTakeWorker']) {
+                                                echo 'selected';
+                                            }
+                                            ?>><?php echo $rowWorker['wname'] ?></option>
+                                            <?php } ?>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
@@ -104,8 +147,12 @@ if (isset($_GET['detail'])) {
                                             $buildingQry = mysqli_query($connection, $buildingQS);
                                             while ($rowBuilding = mysqli_fetch_assoc($buildingQry)) {
                                                 ?>
-                                                <option><?php echo $rowBuilding['listBuilding'] ?></option>
-                                            <?php } ?>
+                                                <option <?php
+                                                if ($rowBuilding['listBuilding'] == $_SESSION['lastTakeSite']) {
+                                                    echo 'selected';
+                                                }
+                                                ?>><?php echo $rowBuilding['listBuilding'] ?></option>
+                                                <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -115,82 +162,75 @@ if (isset($_GET['detail'])) {
                             </div>
                         </form> <!-- /.form-horizontal -->
                     <?php } ?>
-                    <div style="padding: 10px">
-                        <button class="btn btn-default"><span class="glyphicon glyphicon-file"></span> ดูสลิป</button>
-                        <button class="btn btn-default"><span class="glyphicon glyphicon-print"></span> พิมพ์หน้านี้</button>
-                    </div>
 
-                    <div class="col-md-6">
+
+                    <form action="" method="post">
+                        <div class="col-md-12" style="padding: 10px">
+                            <div class="btn btn-group" style="float: left">
+                                <button class="btn btn-default" type="submit" name="showAddBtn" value="submit"><span class="glyphicon glyphicon-leaf"></span> แสดงรายการเพิ่ม</button>
+                                <button class="btn btn-default" type="submit" name="showTakeBtn" value="submit"><span class="glyphicon glyphicon-fire"></span> แสดงรายการเบิก</button>
+                                <button class="btn btn-default" type="submit" name="showItemBtn" value="submit"><span class="glyphicon glyphicon-thumbs-up"></span> แสดงรายการคงเหลือปัจจุบัน</button>
+                            </div>
+                            <div class="btn btn-group" style="float: right">
+                                <button class="btn btn-default" type="submit" name="slipBtn" value="submit"><span class="glyphicon glyphicon-file"></span> ดูสลิป</button>
+                                <button class="btn btn-default" type="submit" name="printBtn" value="submit"><span class="glyphicon glyphicon-print"></span> พิมพ์หน้านี้</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="col-md-12">
                         <?php
                         //ดึง ADD RECORD
-                        $addRecordQS = "SELECT `add_detail`,`add_suffix`,`add_qty`,`add_date`,`add_time`,`adder` FROM `item_add_record`"
-                                . " WHERE `add_detail` LIKE '" . $_SESSION['detail'] . "'"
-                                . " AND `adder` LIKE '". $_SESSION['division'] ."'";
-                        $addRecordQry = mysqli_query($connection, $addRecordQS) or die("addRecordQry failed: " . mysqli_error($connection));
+                        $addTakeQry = mysqli_query($connection, $addTakeQS) or die("addTakeQry failed: " . mysqli_error($connection));
                         ?>
+                        <b>กำลังแสดง: </b><?= $addTakeMsg ?>
                         <table class="table table-bordered table-hover table-condensed table-striped">
                             <thead>
                                 <tr align="center">
-                                    <th>รายการ</th>
-                                    <th>จำนวน</th>
-                                    <th>หน่วย</th>
-                                    <th>วันที่</th>
-                                    <th>เวลา</th>
-                                    <th>เจ้าของ</th>
+                                    <?php
+                                    foreach ($addTakeHeader as $value) {
+                                        echo "<th>" . $value . "</th>";
+                                    }
+                                    ?>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                while ($rowInit = mysqli_fetch_assoc($addRecordQry)) {
-                                    ?>
-                                    <tr align="center">
-                                        <td align="left"><?= $rowInit['add_detail'] ?></td>
-                                        <td><?= $rowInit['add_qty'] ?></td>
-                                        <td><?= $rowInit['add_suffix'] ?></td>
-                                        <td><?= $rowInit['add_date'] ?></td>
-                                        <td><?= date("H:i", strtotime($rowInit['add_time'])) ?></td>
-                                        <td><?= $rowInit['adder'] ?></td>
-                                    </tr>
-                                <?php } ?>
+                                while ($rowAddTake = mysqli_fetch_assoc($addTakeQry)) {
+                                    if (isset($_POST['showAddBtn'])) { //CASE แสดงรายการเพิ่ม
+                                        echo '<tr align="center">';
+                                        echo '<td align="left">' . $rowAddTake[$addTakeData[0]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[1]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[2]] . '</td>';
+                                        echo '<td>' . preg_replace("/(\d+)\D+(\d+)\D+(\d+)/", "$3-$2-$1", $rowAddTake[$addTakeData[3]]) . '</td>';
+                                        echo '<td>' . date("H:i", strtotime($rowAddTake[$addTakeData[4]])) . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[5]] . '</td>';
+                                        echo '</tr>';
+                                    } elseif (isset($_POST['showTakeBtn'])) {
+                                        echo '<tr align="center">';
+                                        echo '<td align="left">' . $rowAddTake[$addTakeData[0]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[1]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[2]] . '</td>';
+                                        echo '<td>' . preg_replace("/(\d+)\D+(\d+)\D+(\d+)/", "$3-$2-$1", $rowAddTake[$addTakeData[3]]) . '</td>';
+                                        echo '<td>' . date("H:i", strtotime($rowAddTake[$addTakeData[4]])) . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[5]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[6]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[7]] . '</td>';
+                                        echo '</tr>';
+                                    } elseif (isset($_POST['showItemBtn'])) {
+                                        echo '<tr align="center">';
+                                        echo '<td align="left">' . $rowAddTake[$addTakeData[0]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[1]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[2]] . '</td>';
+                                        echo '<td>' . $rowAddTake[$addTakeData[3]] . '</td>';
+                                        echo '</tr>';
+                                    }
+                                }
+                                ?>
                             </tbody>
                         </table>
-                    </div>
+                    </div> <!-- /.col-md-12 -->
 
-                    <div class="col-md-6">
-                        <?php
-                        //ดึง TAKE RECORD
-                        $addRecordQS = "SELECT `take_detail`,`take_suffix`,`take_qty`,`take_date`,`take_time`,`taker` FROM `item_take_record`"
-                                . " WHERE `take_detail` LIKE '" . $_SESSION['detail'] . "'";
-                        $addRecordQry = mysqli_query($connection, $addRecordQS) or die("addRecordQry failed: " . mysqli_error($connection));
-                        //echo "<b>มีทั้งหมด:</b> " . count($addRecordQry['detail']) . " รายการ";
-                        ?>
-                        <table border="1">
-                            <thead>
-                                <tr align="center">
-                                    <th>รายการ</th>
-                                    <th>จำนวน</th>
-                                    <th>หน่วย</th>
-                                    <th>วันที่</th>
-                                    <th>เวลา</th>
-                                    <th>เจ้าของ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                while ($rowInit = mysqli_fetch_assoc($addRecordQry)) {
-                                    ?>
-                                    <tr align="center">
-                                        <td align="left"><?= $rowInit['add_detail'] ?></td>
-                                        <td><?= $rowInit['add_qty'] ?></td>
-                                        <td><?= $rowInit['add_suffix'] ?></td>
-                                        <td><?= $rowInit['add_date'] ?></td>
-                                        <td><?= date("H:i", strtotime($rowInit['add_time'])) ?></td>
-                                        <td><?= $rowInit['adder'] ?></td>
-                                    </tr>
-                                <?php } ?>
-                            </tbody>
-                        </table>
-                    </div>
 
                     <?php include 'main_script.php'; ?>
                     <script> /*PREVENT DOUBLE SUBMIT: ทำให้ปุ่ม submit กดได้ครั้งเดียว ป้องกับปัญหาเนต lag แล้ว user กดเบิ้ล มันจะทำให้ส่งค่า 2 เท่า */

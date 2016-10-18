@@ -4,7 +4,9 @@
     <?php if ($_SESSION['status'] == "KEY") { ?>
         <a href="<?= $root_url ?>/add.php" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> เพิ่มใบสั่งซื้อ(ปกติ)</a>
         <a href="<?= $root_url ?>/add_urgent.php" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> เพิ่มใบสั่งซื้อ(เร่งด่วน)</a>
+        <!--
         <a href="<?= $root_url ?>/take.php" class="list-group-item"><span class="glyphicon glyphicon-minus-sign"></span> เบิกใช้งาน</a>
+        -->
     <?php } ?>
         <!--
     <div class="list-group-item">กระดานข่าว:<br/>
