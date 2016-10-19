@@ -121,14 +121,14 @@ if ($_SESSION['status'] != "KEY") {
                                 <tr>
                                     <td><input type='checkbox' class='case'/></td>
                                     <td><span id='snum'>1.</span></td>
-                                    <td><input class="form-control" type='text' id='zdir_1' name='var_zdir[]'/></td>
-                                    <td><input class="form-control" type='text' id='varDetail_1' name='varDetail[]'/></td>
-                                    <td><input class="form-control" type='text' id='var_slipSuffix_1' name='var_slipSuffix[]'/> </td>
-                                    <td><input class="form-control" type='number' id='var_qty_1' name='var_qty[]'/> </td>
-                                    <td><input class="form-control" type='number' id='var_unitPrice_1' name='var_unitPrice[]'/> </td>
-                                    <td><input class="form-control" type='number' id='var_amount_1' name='var_amount[]'/> </td>
-                                    <td bgcolor="#ffffe6"><input class="form-control" type='text' id='var_lastSuffix_1' name='var_lastSuffix[]'/></td>
-                                    <td bgcolor="#ffffe6"><input class="form-control" type='number' id='var_lastQty_1' name='var_lastQty[]'/></td>
+                                    <td><input class="form-control" type='text' id='zdir_1' name='var_zdir[]' required/></td>
+                                    <td><input class="form-control" type='text' id='varDetail_1' name='varDetail[]' required/></td>
+                                    <td><input class="form-control" type='text' id='var_slipSuffix_1' name='var_slipSuffix[]' required/> </td>
+                                    <td><input class="form-control" type='number' id='var_qty_1' name='var_qty[]' required/> </td>
+                                    <td><input class="form-control" type='number' id='var_unitPrice_1' name='var_unitPrice[]' required/> </td>
+                                    <td><input class="form-control" type='number' id='var_amount_1' name='var_amount[]' required/> </td>
+                                    <td bgcolor="#ffffe6"><input class="form-control" type='text' id='var_lastSuffix_1' name='var_lastSuffix[]' required/></td>
+                                    <td bgcolor="#ffffe6"><input class="form-control" type='number' id='var_lastQty_1' name='var_lastQty[]' required/></td>
 
                                 </tr>
                             </table>
