@@ -110,7 +110,7 @@ if ($_SESSION['status'] != "KEY") {
                                     <th><input class='check_all' type='checkbox' onclick="select_all()"/></th>
                                     <th>#</th>
                                     <th>ZDIR</th>
-                                    <th>รายการ(ชื่อตามใบราคากลาง)</th>
+                                    <th>รายการ(ตามใบราคากลาง)</th>
                                     <th>หน่วย</th>
                                     <th>จำนวน</th>
                                     <th>ราคา/หน่วย</th>
