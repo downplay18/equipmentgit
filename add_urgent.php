@@ -23,8 +23,7 @@ unset($_SESSION['owner']);
 
         <title>ADMIN</title>
         <!-- Bootstrap Core CSS -->
-        <?php include 'main_head.php'; ?>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.css"/>
+        <?php require 'main_head.php'; ?>
     </head>
 
     <body>
@@ -53,7 +52,7 @@ unset($_SESSION['owner']);
                     }
                     unset($_SESSION['msg']);
                 } else {
-                    echo "ยังไม่มีรายการแสดง";
+                    echo "ยังไม่มีรายการเพิ่มเติม";
                 }
                 echo "</div>";
                 ?>
@@ -70,8 +69,21 @@ unset($_SESSION['owner']);
                         <h2>เพิ่มใบสั่งซื้อ <small>บันทึกใบสั่งซื้อ(แบบเร่งด่วน)</small></h2>
                     </div>
 
+
+
+                    <!-- ทดสอบอัปโหลดไฟล์
+                    <form action="upload.php" method="post" enctype="multipart/form-data">
+    Select image to upload:
+    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="submit" value="Upload Image" name="submit">
+</form>
+                    -->
+
+
+
+
                     <!-- form and submit button -->
-                    <form id="mainForm" action="add_urgent_process.php" method="post">
+                    <form id="mainForm" action="add_urgent_process.php" method="post" enctype="multipart/form-data">
 
                         <!-- เลขที่ใบเสร็จ+วันที่+กลุ่มงานเข้าของรายการ -->
                         <div class="col-md-12">
@@ -97,10 +109,26 @@ unset($_SESSION['owner']);
                             </div> 
                         </div> <!-- /เลขที่ใบเสร็จ+วันที่+กลุ่มงานเข้าของรายการ -->
 
+
+
+
+
+
+
                         <!-- file upload -->
                         <div class="col-md-12 well" align="center">
-                            <input type="file">          
+
+                            <input type="file" name="fileToUpload" id="fileToUpload">
+
+
                         </div>  <!-- /file upload -->
+
+
+
+
+
+
+
 
                         <!-- input field -->
                         <div>
@@ -118,7 +146,7 @@ unset($_SESSION['owner']);
                                 <tr>
                                     <th><input class='check_all' type='checkbox' onclick="select_all()"/></th>
                                     <th>#</th>
-                                    <th>รายการ(ตามบิลเงินสด)</th>
+                                    <th>รายการ(ชื่อตามรายงานการซื้อ/จ้างเร่งด่วน)</th>
                                     <th>หน่วย</th>
                                     <th>จำนวน</th>
                                     <th>ราคาหน่วยละ</th>
@@ -174,34 +202,36 @@ unset($_SESSION['owner']);
                     </form> <!-- /form and submit button -->
 
 
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     <div class="container col-md-4">
                         <div class = "alert alert-info">
-                            <b>ขั้นตอนการเพิ่ม:</b>
-                            </br><code>1</code> กรอกเลขที่ใบเสร็จ
-                            </br><code>2</code> เลือกไฟล์ที่สแกนจากใบเสร็จ เป็นนามสกุล *.pdf, *.jpg, *.jpeg, *.png, *.gif เท่านั้น
-                            </br><code>3</code> หาก 1 ใบเสร็จมีหลายรายการ ให้กดปุ่ม <kbd>+ Add More</kbd> 
-                            </br><code>4</code> กรอกรายละเอียดให้ครบทุกช่อง 
-                            </br><code>5</code> ตรวจสอบข้อมูลให้ถูกต้อง แล้วกดปุ่ม <kbd>เสร็จสิ้น</kbd>
+                            <code>x</code> NOTHING
                         </div> 
                     </div>
 
                     <div class="container col-md-4">
                         <div class = "alert alert-info">
-                            <span class = "label label-info">INFO</span> การซื้อแบบปกติ ให้ใส่ทุกช่อง<br/>
-                            <span class = "label label-info">INFO</span> การซื้อแบบเร่งด่วน จะไม่มี ZPO และ ZDIR<br/>
-                            <span class = "label label-info">INFO</span> การซื้อแบบเร่งด่วน ยอดรวม และ รวมสุทธิ(+VAT) จะเป็นเลขเดียวกัน<br/>
+                            <span class = "label label-info">INFO</span> NOTHING<br/>
                         </div> 
 
                     </div>
 
                     <div class="container col-md-4">
                         <div class = "alert alert-info"> 
-                            <span class = "label label-warning">INFO</span> แปลงหน่วย คือ ใน 1 หน่วย มีกี่ชิ้น<br/>
-                            <span class = "label label-warning">INFO</span> ใส่ค่าให้ครบทุกช่อง<br/>
-                            <span class = "label label-warning">INFO</span> <font color="red">จน./หน่วย</font> คือ จำนวน "ของ" ใน 1 หน่วยใบเสร็จ<br/>
-                            <span class = "label label-warning">INFO</span> ถ้า<font color="blue">หน่วยย่อย</font>ไม่เปลี่ยน ให้ใช้ <font color="red">จำนวนย่อย/หน่วยย่อย</font> เป็น 1<br/>
-                            <span class = "label label-warning">INFO</span> <code>เลขที่ใบเสร็จที่กรอกลงไป</code> และ <code>เลขที่ใบเสร็จบนไฟล์</code> ต้องตรงกัน!<br/>
-                            <span class = "label label-info">INFO</span> ราคาต่อรายการ** หมายถึง ผลรวมราคาของทุกชิ้นในรายการนั้น<br/>
+                            <span class = "label label-warning">INFO</span> NOTHING<br/>
                         </div> 
                     </div>
 
@@ -216,8 +246,7 @@ unset($_SESSION['owner']);
 
 
 
-        <script src="js/jquery-1.12.2.min.js" type="text/javascript"></script>
-        <script src="js/bootstrap.min.js"></script>
+        <?php require("main_script.php"); ?>
         <script src="js/autocWithAddRow_urgent.js" type="text/javascript"></script>
 
         <script> /*PREVENT DOUBLE SUBMIT: ทำให้ปุ่ม submit กดได้ครั้งเดียว ป้องกับปัญหาเนต lag แล้ว user กดเบิ้ล มันจะทำให้ส่งค่า 2 เท่า */
