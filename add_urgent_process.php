@@ -24,7 +24,7 @@ $_SESSION['msg'] = array();
   print_r($_SESSION);
   echo '<br/>POST = <br/>';
   print_r($_POST);
-  echo "</pre>"; */
+  echo "</pre>";  */
 ?>
 
 
@@ -96,7 +96,7 @@ $row_count = count($_POST['varDetail']);
 
 //สร้าง Query Statement ของแต่ละitem
 for ($rc = 0; $rc < $row_count; $rc++) {
-    $addUrgRecQS = "INSERT INTO `item_urgent_record` (`urg_detail`,`urg_suffix`,`urg_qty`,`urg_unitPrice`,`urg_amount`,`urg_subTotal`,`urg_slipDate`,`urg_addDateTime`,`urg_adder`,`urg_purpose`,`urg_slip`)";
+    $addUrgRecQS = "INSERT INTO `item_urgent_record` (`urg_detail`,`urg_suffix`,`urg_qty`,`urg_unitPrice`,`urg_amount`,`urg_subTotal`,`urg_slipDate`,`urg_addDateTime`,`urg_adder`,`urg_purpose`,`urg_site`,`urg_slip`)";
     $addUrgRecQS .= " VALUES (";
     $addUrgRecQS .= "'" . $_POST['varDetail'][$rc] . "'"; //detail
     $addUrgRecQS .= ",'" . $_POST['var_slipSuffix'][$rc] . "'"; //suffix
@@ -110,11 +110,12 @@ for ($rc = 0; $rc < $row_count; $rc++) {
     date_default_timezone_set("Asia/Bangkok"); //set default timezone
     $addUrgRecQS .= ",'" . date('Y-m-d H:i') . "'"; //addDateTime
     $addUrgRecQS .= ",'" . $_POST['var_adder'] . "'"; //adder
-    $addUrgRecQS .= ",'" . $_POST['var_purpose'] . "'"; //adder
+    $addUrgRecQS .= ",'" . $_POST['var_purpose'] . "'"; //purpose
+    $addUrgRecQS .= ",'" . $_POST['var_site'] . "'"; //adder
     $addUrgRecQS .= ",'" . $target_file . "'"; //slip
     $addUrgRecQS .= ");";
 
-    //print_r($addUrgRecQS);
+    print_r($addUrgRecQS);
     //
     //Query
     $addUrgRecQry = mysqli_query($connection, $addUrgRecQS) or die("คิวรี่ครั้งที่ $rc ล้มเหลว!: " . $mysqli_error($connection));

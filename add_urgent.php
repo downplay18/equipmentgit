@@ -175,9 +175,28 @@ unset($_SESSION['owner']);
                         <!-- ยอดรวม+รวมสุทธิ -->
                         <div align="center">
                             <div class="col-md-1"></div>
-                            <div class="col-md-7">
+                            <div class="col-md-5">
                                 <label for="purpose">เพื่อใช้งาน</label>
                                 <td><input id="purpose" class="form-control" type='text' name='var_purpose' required/> </td>
+                            </div>
+                            <div class="col-md-2">
+                                <label>สถานที่ใช้งาน</label>
+                                <div class="form-group">
+                                    <select class="form-control" name="var_site" required>
+                                        <option></option>
+                                        <?php
+                                        $buildingQS = "SELECT `buildingID`,`listBuilding` FROM `list_building` ORDER BY `buildingID` ASC";
+                                        $buildingQry = mysqli_query($connection, $buildingQS);
+                                        while ($rowBuilding = mysqli_fetch_assoc($buildingQry)) {
+                                            ?>
+                                            <option <?php
+                                            if ($rowBuilding['listBuilding'] == $_SESSION['lastTakeSite']) {
+                                                echo 'selected';
+                                            }
+                                            ?>><?php echo $rowBuilding['listBuilding'] ?></option>
+                                            <?php } ?>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-3"> 
                                 <label>รวมเงิน</label>
@@ -202,20 +221,20 @@ unset($_SESSION['owner']);
                     </form> <!-- /form and submit button -->
 
 
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
-                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     <div class="container col-md-4">
                         <div class = "alert alert-info">
                             <code>x</code> NOTHING
