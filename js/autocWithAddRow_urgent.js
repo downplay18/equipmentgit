@@ -51,7 +51,7 @@ $(".addmore").on('click', function () {
             var names = ui.item.data.split("|");
             id_arr = $(this).attr('id');
             id = id_arr.split("_");
-            $('#var_lastSuffix_' + id[1]).val(names[1]);
+            $('#var_slipSuffix_' + id[1]).val(names[1]);
         }
     });
     i++;
@@ -102,6 +102,6 @@ $('#varDetail_1').autocomplete({
     minLength: 0,
     select: function (event, ui) {
         var names = ui.item.data.split("|");
-        $('#var_lastSuffix_1').val(names[1]);
+        $('#var_slipSuffix_1').val(names[1]);
     }
 });
