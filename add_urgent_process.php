@@ -24,7 +24,7 @@ $_SESSION['msg'] = array();
   print_r($_SESSION);
   echo '<br/>POST = <br/>';
   print_r($_POST);
-  echo "</pre>";  */
+  echo "</pre>"; */
 ?>
 
 
@@ -34,13 +34,21 @@ $_SESSION['msg'] = array();
 //ตั้งfolder สำหรับเก็บไฟล์ที่อัปมา
 $target_dir = "slip/";
 
-//สร้างfullpath โดย basenameคือแสดงชื่อไฟล์แบบมีนามสกุลด้วย
-date_default_timezone_set("Asia/Bangkok"); //set default timezone
-//$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$target_file = $target_dir . $_SESSION['user_id']."_".date('Y-m-d')."_".date('His') .".". pathinfo($_FILES['fileToUpload']['name'], PATHINFO_EXTENSION);;
 
 //ตั้งเป็นdefaultว่าokไว้ก่อน ถ้าเช็คตามเคสแล้วfalse จะโดนเปลี่ยนเป็น 0
 $uploadOk = 1;
+
+//เช็คว่าได้เลือกไฟล์ไหม
+if (empty($_FILES['fileToUpload']['name'])) {
+    echo "ไม่ได้เลือกไฟล์เพื่ออัปโหลด";
+    array_push($_SESSION['msg'], "ไม่พบไฟล์สลิป...");
+    $uploadOk = 0;
+} else { //กรณีมีไฟล์ถูกอัปโหลด ให้มีไฟล์ก่อนถึงค่อยสร้าง full path ไม่งั้นถึงไม่มีไฟล์ก็สร้าง จำทำให้มีแต่ชื่อไม่มีไฟล์
+    //สร้างfullpath โดย basenameคือแสดงชื่อไฟล์แบบมีนามสกุลด้วย
+    date_default_timezone_set("Asia/Bangkok"); //set default timezone
+    //$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    $target_file = $target_dir . $_SESSION['user_id'] . "_" . date('Y-m-d') . "_" . date('His') . "." . pathinfo($_FILES['fileToUpload']['name'], PATHINFO_EXTENSION);
+}
 
 //เก็บนามสกุลไฟล์(extension)แบบไม่มีจุดนำหน้า
 $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
