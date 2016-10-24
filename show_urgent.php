@@ -17,7 +17,7 @@ unset($_SESSION['owner']);
 
 <?php
 //สร้าง Query Statement สำหรับแสดง ใบสั่งซื้อ(ปกติ)
-$divSiteQS = "";
+$urgentQS = "";
 $tableHeader = "";
 $tableData = "";
 $qryMsg = "";
@@ -29,45 +29,55 @@ if (isset($_POST['submitBtn'])) {
         //ไม่ได้เลือก
         if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" && $_POST['siteName'] == "-- แยกตามสถานที่ใช้งาน --") {
             //echo '1-- แยกตามกลุ่มงาน -- -- แยกตามสถานที่ใช้งาน --';
-            $qryMsg = "(ไม่มีค่าถูกเลือก)";
+            $qryMsg = "(ไม่มีค่าที่เลือก)";
             break;
         }
         //เลือกทั้งกลุ่มงาน+สถานที่ใช้งาน
         if ($_POST['divName'] != "-- แยกตามกลุ่มงาน --" && $_POST['siteName'] != "-- แยกตามสถานที่ใช้งาน --") {
             //echo '99 เลือกทั้งกลุ่มงานและสถานที่ใช้งาน';
-            $divSiteQS = "SELECT * FROM `item_take_record` WHERE `taker` LIKE '" . $_POST['divName'] . "'"
-                    . " AND `site` LIKE '" . $_POST['siteName'] . "'";
-            $tableHeader = array("รายการ", "ใช้ไป", "ใช้ที่", "เจ้าของ");
-            $tableData = array("take_detail", "take_qty", "take_suffix", "site", "taker");
+            $urgentQS = "SELECT `urg_detail`, SUM(`urg_qty`) as sum_urgQty, `urg_suffix`,`urg_site`, `urg_adder`"
+                    . "FROM `item_urgent_record` "
+                    . "WHERE `urg_adder` LIKE '" . $_POST['divName'] . "'"
+                    . " AND `urg_site` LIKE '" . $_POST['siteName'] . "'"
+                    . " GROUP BY `urg_detail`,`urg_suffix`,`urg_site`,`urg_adder`";
+            $tableHeader = array("รายการ", "จำนวนรวม", "หน่วย", "ใช้ที่", "เจ้าของ");
+            $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_site", "urg_adder");
             $qryMsg = $_POST['divName'] . ", " . $_POST['siteName'];
             break;
         }
         //เลือกเฉพาะกลุ่มงาน
         if ($_POST['divName'] != "-- แยกตามกลุ่มงาน --") {
             //echo '2-- แยกตามกลุ่มงาน --';
-            $divSiteQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item` WHERE `owner` LIKE '" . $_POST['divName'] . "'";
-            $tableHeader = array("รายการ", "ใช้ไป", "เจ้าของ");
-            $tableData = array("detail", "quantity", "suffix", "owner");
+            $urgentQS = "SELECT `urg_detail`, SUM(`urg_qty`) as sum_urgQty, `urg_suffix`, `urg_adder`"
+                    . " FROM `item_urgent_record`"
+                    . " WHERE `urg_adder` LIKE '" . $_POST['divName'] . "'"
+                    . " GROUP BY `urg_detail`,`urg_suffix`";
+            $tableHeader = array("รายการ", "จำนวนรวม", "หน่วย", "เจ้าของ");
+            $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_adder");
             $qryMsg = $_POST['divName'];
             break;
         }
         //เลือกเฉพาะสถานที่ใช้งาน
         if ($_POST['siteName'] != "-- แยกตามสถานที่ใช้งาน --") {
             //echo '3-- แยกตามสถานที่ใช้งาน --';
-            $divSiteQS = "SELECT * FROM `item_take_record` WHERE `site` LIKE '" . $_POST['siteName'] . "'";
-            //. " GROUP BY `take_detail`";
-            $tableHeader = array("รายการ", "ใช้ไป", "ใช้ที่", "เจ้าของ");
-            $tableData = array("take_detail", "take_qty", "take_suffix", "site", "taker");
+            $urgentQS = "SELECT `urg_detail`,SUM(`urg_qty`) as sum_urgQty,`urg_suffix`,`urg_site`"
+                    . " FROM `item_urgent_record`"
+                    . " WHERE `urg_site` LIKE '" . $_POST['siteName'] . "'"
+                    . " GROUP BY `urg_detail`,`urg_suffix`";
+            $tableHeader = array("รายการ", "จำนวน", "หน่วย", "ใช้ที่");
+            $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_site");
             $qryMsg = $_POST['siteName'];
             break;
         }
     } while (0);
 } else { //กดปุ่ม แสดงทั้งหมด
     //echo "enter else";
-    $divSiteQS = "SELECT `detail`,`quantity`,`suffix`,`owner` FROM `item`";
-    $tableHeader = array("รายการ", "คงเหลือ", "เจ้าของ");
-    $tableData = array("detail", "quantity", "suffix", "owner");
-    $qryMsg = "รายการสั่งซื้อ(ปกติ) ทั้งหมด";
+    $urgentQS = "SELECT `urg_detail`,SUM(`urg_qty`) as sum_urgQty,`urg_suffix`,`urg_adder`,`urg_purpose`"
+            . " FROM `item_urgent_record`"
+            . " GROUP BY `urg_detail`,`urg_adder`,`urg_suffix`";
+    $tableHeader = array("รายการ", "จำนวนรวม", "หน่วย", "เจ้าของ");
+    $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_adder");
+    $qryMsg = "รายการสั่งซื้อแบบปกติทั้งหมด";
     $_SESSION['lastDiv'] = "-- แยกตามกลุ่มงาน --";
     $_SESSION['lastSite'] = "-- แยกตามสถานที่ใช้งาน --";
 }
@@ -88,11 +98,11 @@ if (isset($_POST['submitBtn'])) {
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
         include 'navbar.php';
 
-        
-          echo 'SESSION = ';
-          print_r($_SESSION);
-          echo '<br/>POST = <br/>';
-          print_r($_POST); 
+
+        echo 'SESSION = ';
+        print_r($_SESSION);
+        echo '<br/>POST = <br/>';
+        print_r($_POST);
         ?>
 
         <div class="row">
@@ -107,7 +117,7 @@ if (isset($_POST['submitBtn'])) {
                 <div class="container-fluid">
 
                     <div class="page-header">
-                        <h2>สืบค้น <small>ระบบสืบค้นและพิมพ์รายงาน</small></h2>
+                        <h2>สืบค้น <small>สำหรับรายการที่สั่งซื้อแบบ เร่งด่วน</small></h2>
                     </div>
 
 
@@ -158,10 +168,10 @@ if (isset($_POST['submitBtn'])) {
                                     </select>
                                 </div> <!-- /.col-md-3 -->
                                 <div class="col-md-1">
-                                    <button class="btn btn-success" type="submit" name="submitBtn" value="submit"><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
+                                    <button class="btn btn-success" type="submit" name="submitBtn" value="submit" autofocus=""><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
                                 </div>
                                 <div class="col-md-1">
-                                    <button class="btn btn-default" type="submit" name="SubmitAll" value="submit"><span class="glyphicon glyphicon-list" autofocus></span> แสดงทั้งหมด</button>
+                                    <button class="btn btn-default" type="submit" name="SubmitAll" value="submit"><span class="glyphicon glyphicon-list"></span> แสดงทั้งหมด</button>
                                 </div>
                             </form>
 
@@ -173,7 +183,7 @@ if (isset($_POST['submitBtn'])) {
 
 
                         <?php
-                        $divSiteQry = mysqli_query($connection, $divSiteQS);
+                        $divSiteQry = mysqli_query($connection, $urgentQS);
                         $divSiteCount = mysqli_num_rows($divSiteQry);
                         if ($divSiteCount == 0) {
                             ?>
@@ -193,16 +203,17 @@ if (isset($_POST['submitBtn'])) {
                                     </thead>
                                     <tbody>
                                         <?php
-                                        //echo '<br/>' . $divSiteQS;
+                                        //echo '<br/>' . $urgentQS;
                                         while ($rowDivSite = mysqli_fetch_assoc($divSiteQry)) {
                                             ?>
                                             <tr align="center">
                                                 <td align="left">
-                                                    <a href="show_item.php?detail=<?= $rowDivSite['detail'] ?>&owner=<?= $rowDivSite['owner'] ?>&suffix=<?= $rowDivSite['suffix'] ?>" target="_blank">
+                                                    <a href="show_item_urgent.php?detail=<?= $rowDivSite['urg_detail'] ?>&adder=<?= $rowDivSite['urg_adder'] ?>&suffix=<?= $rowDivSite['urg_suffix'] ?>" target="_blank">
                                                         <?= $rowDivSite[$tableData[0]] ?>
                                                     </a>
                                                 </td>
-                                                <td nowrap><?= $rowDivSite[$tableData[1]].' '.$rowDivSite[$tableData[2]] ?></td>
+                                                <td><?= $rowDivSite[$tableData[1]] ?></td>
+                                                <td><?= $rowDivSite[$tableData[2]] ?></td>
                                                 <td><?= $rowDivSite[$tableData[3]] ?></td>
                                                 <?php if (isset($rowDivSite[$tableData[4]])) { ?>
                                                     <td><?= $rowDivSite[$tableData[4]] ?></td>
