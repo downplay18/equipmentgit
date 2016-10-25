@@ -11,6 +11,8 @@ if ($_SESSION['user_id'] == "") {
 if ($_SESSION['status'] != "KEY") {
     header("Location: $root_url/index.php", true, 302);
 }
+
+$_SESSION['addMsg'] = array();
 ?>
 
 <html>
@@ -25,11 +27,83 @@ if ($_SESSION['status'] != "KEY") {
     echo '<br/>';
     echo 'SESSION = ';
     print_r($_SESSION);
-    echo '<br/>loginResult =<br/>';
-    print_r($loginResult);
     echo '<br/>POST = <br/>';
     print_r($_POST);
     ?>
+
+
+
+
+
+
+    <?php
+// เช็คไฟล์ก่อน
+//ตั้งfolder สำหรับเก็บไฟล์ที่อัปมา
+    $target_dir = "slip/";
+
+//ตั้งเป็นdefaultว่าokไว้ก่อน ถ้าเช็คตามเคสแล้วfalse จะโดนเปลี่ยนเป็น 0
+    $uploadOk = 1;
+
+//เช็คว่าได้เลือกไฟล์ไหม
+    if (empty($_FILES['fileToUpload']['name'])) {
+        echo "<br/>ไม่ได้เลือกไฟล์เพื่ออัปโหลด";
+        array_push($_SESSION['addMsg'], "ไม่พบไฟล์สลิป...");
+        $uploadOk = 0;
+    } else { //กรณีมีไฟล์ถูกอัปโหลด ให้มีไฟล์ก่อนถึงค่อยสร้าง full path ไม่งั้นถึงไม่มีไฟล์ก็สร้าง จำทำให้มีแต่ชื่อไม่มีไฟล์
+        //สร้างfullpath โดย basenameคือแสดงชื่อไฟล์แบบมีนามสกุลด้วย
+        date_default_timezone_set("Asia/Bangkok"); //set default timezone
+        $target_file = $target_dir . "n" . $_SESSION['user_id'] . "_" . date('Y-m-d') . "_" . date('His') . "." . pathinfo($_FILES['fileToUpload']['name'], PATHINFO_EXTENSION);
+    }
+
+//เก็บนามสกุลไฟล์(extension)แบบไม่มีจุดนำหน้า
+    $imageFileType = pathinfo($target_file, PATHINFO_EXTENSION);
+
+// โค้ดเก่าสำหรับเช็คว่าเป็นรูปภาพหรือเปล่าเท่านั้น
+// Check if image file is a actual image or fake image
+    /*
+      if (isset($_POST["submit"])) {
+      $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+      if ($check !== false) {
+      echo "File is an image - " . $check["mime"] . ".";
+      $uploadOk = 1;
+      } else {
+      echo "File is not an image.";
+      $uploadOk = 0;
+      }
+      } */
+
+// เช็คไฟล์ซํ้า
+    if (file_exists($target_file)) {
+        echo "มีไฟล์ชื่อซํ้ากันอยู่แล้ว<br/>";
+        $uploadOk = 0;
+    } else {
+        echo "ชื่อไฟล์ไม่ซํ้า ...OK!<br/>";
+    }
+
+// Check file size
+    $maxFileSize = 10485760; //10485760=10MiB
+    if ($_FILES["fileToUpload"]["size"] > $maxFileSize) {
+        echo "ไม่สามารถอัปโหลดไฟล์ที่มีขนาดเกิน&nbsp;" . $maxFileSize / 1048576 . " MB ได้<br/>";
+        $uploadOk = 0;
+    } else {
+        echo "ขนาดไฟล์ไม่เกิน" . $maxFileSize / 1048576 . " MB ...OK!<br/>";
+    }
+
+// เช็คนามสกุลไฟล์
+    $allowedExts = array("pdf", "doc", "docx", "jpg", "jpeg", "png", "gif");
+    if ($imageFileType != "pdf" && $imageFileType != "doc" && $imageFileType != "docx" && $imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png" && $imageFileType != "gif") {
+        echo "นามสกุลไฟล์ไม่ถูกต้อง กรุณาอัปโหลด pdf, doc, docx, jpg, jpeg, png, gif เท่านั้น<br/>";
+        $uploadOk = 0;
+    } else {
+        echo "นามสกุลไฟล์ถูกต้อง ...OK!<br/>";
+    }
+
+// โค้ดย้ายไฟล์เข้าserver อยู่ข้างล่างการ query
+    ?>
+
+
+
+
 
 
     <?php
@@ -90,7 +164,7 @@ if ($_SESSION['status'] != "KEY") {
     include 'item_headerInfo.php';
     for ($rc = 0; $rc < $row_count; $rc++) { /* 1 $rc คือ 1 แถวของรายการใน 1 ใบเสร็จ */
         if ($_POST['varDetail'][$rc] != "") { /* เช็คที่ detail เพราะมันเป็น primary key */
-            $addItemStatement .= "INSERT INTO `item_slip` (`zpo`,`zdir`,`slip_date`,`detail`,`slip_suffix`,`qty`,`unit_price`,`amount`,`sub_total`,`grand_total`,`adder`)";
+            $addItemStatement .= "INSERT INTO `item_slip` (`zpo`,`zdir`,`slip_date`,`detail`,`slip_suffix`,`qty`,`unit_price`,`amount`,`sub_total`,`grand_total`,`adder`,`slip`)";
             $item_add_record_statement .= "INSERT INTO `item_add_record` (`add_detail`,`add_suffix`,`add_qty`,`add_date`,`add_time`,`adder`)";
             $item_statement .= "INSERT INTO `item` (`detail`,`suffix`,`quantity`,`owner`)";
 
@@ -113,6 +187,7 @@ if ($_SESSION['status'] != "KEY") {
             $addItemStatement .= ",'" . $_POST['var_subTotal'] . "'"; /* sub_total */
             $addItemStatement .= ",'" . $_POST['var_grandTotal'] . "'"; /* grand_total */
             $addItemStatement .= ",'" . $_POST['var_adder'] . "'"; /* adder */
+            $addItemStatement .= ",'" . $target_file . "'"; //slip
             $addItemStatement .= ");";
 
             //ใส่ใน TABLE: item_add_record
@@ -159,6 +234,9 @@ if ($_SESSION['status'] != "KEY") {
     $fullStatement .= $item_statement; /* TABLE: item */
     $fullStatement .= "COMMIT;";
 
+    array_push($_SESSION['addMsg'], "เพิ่มใบเสร็จ ...OK!");
+    array_push($_SESSION['addMsg'], "รายการเพิ่ม ...OK!");
+    array_push($_SESSION['addMsg'], "รายการนับ ...OK!");
 
     //$item_add จะพิเศษหน่อยตรงที่ มันมี detail เป็น key ทำให้เวลา INSERT INTO ที่เป็ฯ statement ใหญ่ๆ ถ้ามีบางตัวที่ซํ้า มันจะทำให้ตัวอื่นที่ไม่ซํ้า error ไปหมด
 
@@ -170,8 +248,51 @@ if ($_SESSION['status'] != "KEY") {
     echo "<br/><br/>fullState=" . $fullStatement;
 
 
-    mysqli_multi_query($connection, $fullStatement) or die("add_confirm.php/fullStatement FAIL".mysqli_error($connection));
+    mysqli_multi_query($connection, $fullStatement) or die("add_confirm.php/fullStatement FAIL" . mysqli_error($connection));
     ?>
+
+
+
+
+
+    <?php
+// เช็ค $uploadOK ไม่มี error
+    if ($uploadOk == 0) {
+        echo "ไฟล์ไม่ถูกอัปโหลด";
+
+// if everything is ok, try to upload file
+    } else {
+        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+            echo "อัปโหลดไฟล์ " . basename($_FILES["fileToUpload"]["name"]) . " เสร็จสมบูรณ์!";
+            array_push($_SESSION['addMsg'], "อัปโหลดไฟล์ ...OK!");
+            array_push($_SESSION['addMsg'], "<a href=\"$target_file\" target=\"_blank\">คลิกที่นี่เพื่อตรวจสอบไฟล์</a>");
+        } else {
+            echo "ไม่สามารถอัปโหลดไฟล์ได้ (Status(" . $uploadOk . "))";
+        }
+    }
+
+    //header("Location: $root_url/add_urgent.php", true, 302);
+    ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!------------------------------- ดึงค่าของ table:item ออกมาก่อน เอาไว้บวกกับค่าที่เพิ่มเข้ามาเพื่อแสดงอย่างเดียว -------------------------------> 
     <?php

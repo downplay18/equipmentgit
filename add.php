@@ -27,8 +27,6 @@ if ($_SESSION['status'] != "KEY") {
         echo '<br/>';
         echo 'SESSION = ';
         print_r($_SESSION);
-        echo '<br/>loginResult =<br/>';
-        print_r($loginResult);
         echo '<br/>POST = <br/>';
         print_r($_POST);
         /*
@@ -43,7 +41,20 @@ if ($_SESSION['status'] != "KEY") {
         <div class="row">
 
             <div class="col-md-2 sidebar">
-                <?php include 'sidebar.php'; ?>
+                <?php
+                include 'sidebar.php';
+                echo "<div class = 'alert alert-info'>";
+                echo "<b>สถานะ:</b><br/>";
+                if (isset($_SESSION['msg'])) {
+                    foreach ($_SESSION['msg'] as $v) {
+                        echo $v . "<br/>";
+                    }
+                    unset($_SESSION['msg']);
+                } else {
+                    echo "ยังไม่มีรายการเพิ่มเติม";
+                }
+                echo "</div>";
+                ?>
             </div>
 
             <div class="col-md-10">
@@ -56,7 +67,7 @@ if ($_SESSION['status'] != "KEY") {
                     </div>
 
                     <!-- form and submit button -->
-                    <form id="mainForm" action="add_process.php" method="post">
+                    <form id="mainForm" action="add_process.php" method="post" enctype="multipart/form-data">
 
                         <!-- เลขที่ใบเสร็จ+วันที่+กลุ่มงานเข้าของรายการ -->
                         <div class="col-md-12">
@@ -89,7 +100,7 @@ if ($_SESSION['status'] != "KEY") {
 
                         <!-- file upload -->
                         <div class="col-md-12 well" align="center">
-                            <input type="file">          
+                            <input type="file" name="fileToUpload" id="fileToUpload">
                         </div>  <!-- /file upload -->
 
                         <!-- input field -->
