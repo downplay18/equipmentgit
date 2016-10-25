@@ -117,10 +117,7 @@ unset($_SESSION['owner']);
 
                         <!-- file upload -->
                         <div class="col-md-12 well" align="center">
-
                             <input type="file" name="fileToUpload" id="fileToUpload">
-
-
                         </div>  <!-- /file upload -->
 
 

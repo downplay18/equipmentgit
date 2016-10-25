@@ -16,9 +16,7 @@ if ($_SESSION['status'] != "KEY") {
 $_SESSION['msg'] = array();
 ?>
 
-<?php
-
-/*
+<?php /*
   echo '<pre>';
   echo 'SESSION = ';
   print_r($_SESSION);
@@ -34,7 +32,6 @@ $_SESSION['msg'] = array();
 //ตั้งfolder สำหรับเก็บไฟล์ที่อัปมา
 $target_dir = "slip/";
 
-
 //ตั้งเป็นdefaultว่าokไว้ก่อน ถ้าเช็คตามเคสแล้วfalse จะโดนเปลี่ยนเป็น 0
 $uploadOk = 1;
 
@@ -46,8 +43,7 @@ if (empty($_FILES['fileToUpload']['name'])) {
 } else { //กรณีมีไฟล์ถูกอัปโหลด ให้มีไฟล์ก่อนถึงค่อยสร้าง full path ไม่งั้นถึงไม่มีไฟล์ก็สร้าง จำทำให้มีแต่ชื่อไม่มีไฟล์
     //สร้างfullpath โดย basenameคือแสดงชื่อไฟล์แบบมีนามสกุลด้วย
     date_default_timezone_set("Asia/Bangkok"); //set default timezone
-    //$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-    $target_file = $target_dir . $_SESSION['user_id'] . "_" . date('Y-m-d') . "_" . date('His') . "." . pathinfo($_FILES['fileToUpload']['name'], PATHINFO_EXTENSION);
+    $target_file = $target_dir ."u". $_SESSION['user_id'] . "_" . date('Y-m-d') . "_" . date('His') . "." . pathinfo($_FILES['fileToUpload']['name'], PATHINFO_EXTENSION);
 }
 
 //เก็บนามสกุลไฟล์(extension)แบบไม่มีจุดนำหน้า
@@ -134,7 +130,9 @@ for ($rc = 0; $rc < $row_count; $rc++) {
         array_push($_SESSION['msg'], "Query#$userAlert-เพิ่มรายการที่ $userAlert ...สำเร็จ!");
     }
 }
+?>
 
+<?php
 // เช็ค $uploadOK ไม่มี error
 if ($uploadOk == 0) {
     echo "ไฟล์ไม่ถูกอัปโหลด";
