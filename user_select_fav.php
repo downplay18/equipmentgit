@@ -27,7 +27,7 @@ require("connection.php");
         <?php
         /* navbar */
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
-        require("navbar_authen.php");
+        require("navbar.php");
 
         /*
           echo '<br/>';
