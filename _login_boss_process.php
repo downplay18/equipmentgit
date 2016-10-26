@@ -31,12 +31,21 @@ print_r($_POST);
 
 foreach ($_POST['date'] as $date) {
     $addKnownQry = mysqli_query($connection, "UPDATE `item_add_record`"
-            . " SET `add_known` = '". $_SESSION['name'] ."'"
+            . " SET `add_known` = '" . $_SESSION['name'] . "'"
             . " WHERE `add_date` LIKE '" . $date . "' ");
     $takeKnownQry = mysqli_query($connection, "UPDATE `item_take_record`"
-            . " SET `take_known` = '". $_SESSION['name'] ."'"
+            . " SET `take_known` = '" . $_SESSION['name'] . "'"
             . " WHERE `take_date` LIKE '" . $date . "' ");
+    if ($date == 'otherDate') {
+        $otherAddKnownQry = mysqli_query($connection, "UPDATE `item_add_record`"
+                . " SET `add_known` = '" . $_SESSION['name'] . "'"
+                . " WHERE `add_date` < '" . $_SESSION['otherDate'] . "'");
+        $otherTakeKnownQry = mysqli_query($connection, "UPDATE `item_take_record`"
+                . " SET `take_known` = '" . $_SESSION['name'] . "'"
+                . " WHERE `take_date` <'" . $_SESSION['otherDate'] . "'");
+    }
 }
+
 
 header("Location: $root_url/_login_boss.php", true, 302);
 ?>
