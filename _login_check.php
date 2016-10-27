@@ -44,7 +44,6 @@ if (!$loginResult) {
     $_SESSION["name"] = $loginResult["name"];
     $_SESSION["division"] = $loginResult['division'];
 
-    //unset($loginResult);
     session_write_close();
 
     if ($loginResult["status"] == "BOSS") {
@@ -54,8 +53,6 @@ if (!$loginResult) {
     } else {
         header("location:index.php");
     }
-
-    //unset($loginResult);
 
     /*
       switch ($loginResult["Status"]) {
