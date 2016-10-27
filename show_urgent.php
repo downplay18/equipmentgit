@@ -40,7 +40,7 @@ if (isset($_POST['submitBtn'])) {
                     . "WHERE `urg_adder` LIKE '" . $_POST['divName'] . "'"
                     . " AND `urg_site` LIKE '" . $_POST['siteName'] . "'"
                     . " GROUP BY `urg_detail`,`urg_suffix`,`urg_site`,`urg_adder`";
-            $tableHeader = array("รายการ", "จำนวนรวม", "หน่วย", "ใช้ที่", "เจ้าของ");
+            $tableHeader = array("รายการ", "จำนวนรวม", "ใช้ที่", "เจ้าของ");
             $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_site", "urg_adder");
             $qryMsg = $_POST['divName'] . ", " . $_POST['siteName'];
             break;
@@ -52,7 +52,7 @@ if (isset($_POST['submitBtn'])) {
                     . " FROM `item_urgent_record`"
                     . " WHERE `urg_adder` LIKE '" . $_POST['divName'] . "'"
                     . " GROUP BY `urg_detail`,`urg_suffix`";
-            $tableHeader = array("รายการ", "จำนวนรวม", "หน่วย", "เจ้าของ");
+            $tableHeader = array("รายการ", "จำนวนรวม", "เจ้าของ");
             $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_adder");
             $qryMsg = $_POST['divName'];
             break;
@@ -64,7 +64,7 @@ if (isset($_POST['submitBtn'])) {
                     . " FROM `item_urgent_record`"
                     . " WHERE `urg_site` LIKE '" . $_POST['siteName'] . "'"
                     . " GROUP BY `urg_detail`,`urg_suffix`";
-            $tableHeader = array("รายการ", "จำนวน", "หน่วย", "ใช้ที่");
+            $tableHeader = array("รายการ", "จำนวน", "ใช้ที่");
             $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_site");
             $qryMsg = $_POST['siteName'];
             break;
@@ -75,7 +75,7 @@ if (isset($_POST['submitBtn'])) {
     $urgentQS = "SELECT `urg_detail`,SUM(`urg_qty`) as sum_urgQty,`urg_suffix`,`urg_adder`,`urg_purpose`"
             . " FROM `item_urgent_record`"
             . " GROUP BY `urg_detail`,`urg_adder`,`urg_suffix`";
-    $tableHeader = array("รายการ", "จำนวนรวม", "หน่วย", "เจ้าของ");
+    $tableHeader = array("รายการ", "จำนวนรวม", "เจ้าของ");
     $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_adder");
     $qryMsg = "รายการสั่งซื้อ(เร่งด่วน) ทั้งหมด";
     $_SESSION['lastDiv'] = "-- แยกตามกลุ่มงาน --";
@@ -212,8 +212,7 @@ if (isset($_POST['submitBtn'])) {
                                                         <?= $rowDivSite[$tableData[0]] ?>
                                                     </a>
                                                 </td>
-                                                <td><?= $rowDivSite[$tableData[1]] ?></td>
-                                                <td><?= $rowDivSite[$tableData[2]] ?></td>
+                                                <td><?= $rowDivSite[$tableData[1]] . " " . $rowDivSite[$tableData[2]] ?></td>
                                                 <td><?= $rowDivSite[$tableData[3]] ?></td>
                                                 <?php if (isset($rowDivSite[$tableData[4]])) { ?>
                                                     <td><?= $rowDivSite[$tableData[4]] ?></td>
