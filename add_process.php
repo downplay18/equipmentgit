@@ -214,10 +214,6 @@ $fullStatement .= $item_add_record_statement; /* TABLE: item_add_record */
 $fullStatement .= $item_statement; /* TABLE: item */
 $fullStatement .= "COMMIT;";
 
-array_push($_SESSION['addMsg'], "เพิ่มใบเสร็จ ...OK!");
-array_push($_SESSION['addMsg'], "รายการเพิ่ม ...OK!");
-array_push($_SESSION['addMsg'], "รายการนับ ...OK!");
-
 //$item_add จะพิเศษหน่อยตรงที่ มันมี detail เป็น key ทำให้เวลา INSERT INTO ที่เป็ฯ statement ใหญ่ๆ ถ้ามีบางตัวที่ซํ้า มันจะทำให้ตัวอื่นที่ไม่ซํ้า error ไปหมด
 
 
@@ -228,7 +224,11 @@ echo "<br/><br/>add item=" . $item_statement;
 echo "<br/><br/>fullState=" . $fullStatement;
 
 
-mysqli_multi_query($connection, $fullStatement) or die("add_confirm.php/fullStatement FAIL" . mysqli_error($connection));
+$fullQry = mysqli_multi_query($connection, $fullStatement) or die("<br/>add_confirm.php/fullStatement FAIL" . mysqli_error($connection));
+
+if($fullQry) {
+    array_push($_SESSION['addMsg'],"เพิ่ม $row_count รายการ ...OK!") ;
+}
 ?>
 
 
@@ -247,11 +247,12 @@ if ($uploadOk == 0) {
         array_push($_SESSION['addMsg'], "อัปโหลดไฟล์ ...OK!");
         array_push($_SESSION['addMsg'], "<a href=\"$target_file\" target=\"_blank\">คลิกที่นี่เพื่อตรวจสอบไฟล์</a>");
     } else {
-        echo "ไม่สามารถอัปโหลดไฟล์ได้ (Status(" . $uploadOk . "))";
+        echo "ไม่พบไฟล์แนบ (Status(" . $uploadOk . "))";
+        array_push($_SESSION['addMsg'],"ไม่พบไฟล์แนบ (Status(" . $uploadOk . "))");
     }
 }
 
-//header("Location: $root_url/add.php", true, 302);
+header("Location: $root_url/add.php", true, 302);
 ?>
 
 

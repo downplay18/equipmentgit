@@ -27,13 +27,13 @@ if ($_SESSION['status'] != "BOSS") {
         include("navbar.php");
 
         /*
-        echo '<br/>';
-        echo 'SESSION = ';
-        print_r($_SESSION);
-        echo '<br/>loginResult =<br/>';
-        print_r($loginResult);
-        echo '<br/>POST = <br/>';
-        print_r($_POST); */
+          echo '<br/>';
+          echo 'SESSION = ';
+          print_r($_SESSION);
+          echo '<br/>loginResult =<br/>';
+          print_r($loginResult);
+          echo '<br/>POST = <br/>';
+          print_r($_POST); */
         ?>
 
 
@@ -117,7 +117,10 @@ if ($_SESSION['status'] != "BOSS") {
                         $chkDateQry = mysqli_query($connection, "SELECT `add_detail`,`take_detail`,`add_date`"
                                 . " FROM `item_add_record`,`item_take_record`"
                                 . " WHERE `add_known` LIKE ''"
-                                . " OR `take_known` LIKE ''") or die("chkDateQry failed: ".  mysqli_error($connection));
+                                . " OR `take_known` LIKE ''"
+                                . " AND `adder`='" . $_SESSION['division'] . "'"
+                                . " AND `taker`='". $_SESSION['division'] ."'")
+                                or die("chkDateQry failed: " . mysqli_error($connection));
                         if (mysqli_num_rows($chkDateQry) !== 0) {
                             ?>
                             <div class="alert alert-warning">
@@ -127,9 +130,17 @@ if ($_SESSION['status'] != "BOSS") {
                                     <!-- วันที่ 1 -->
                                     <?php
                                     $date1 = date("Y-m-d");
-                                    $a1qry = mysqli_query($connection, "SELECT * FROM item_add_record WHERE add_date LIKE '" . $date1 . "' AND add_known LIKE ''")
+                                    $a1qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_add_record"
+                                            . " WHERE add_date <= '" . $date1 . "'"
+                                            . " AND add_known LIKE ''"
+                                            . " AND `adder` LIKE '". $_SESSION['division'] ."'")
                                             or die("a1qry" . mysqli_error($connection));
-                                    $t1qry = mysqli_query($connection, "SELECT * FROM item_take_record WHERE take_date LIKE '" . $date1 . "' AND take_known LIKE ''")
+                                    $t1qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_take_record"
+                                            . " WHERE take_date <= '" . $date1 . "'"
+                                            . " AND take_known LIKE ''"
+                                            . " AND `taker` LIKE '". $_SESSION['division'] ."'")
                                             or die("t1qry" . mysqli_error($connection));
                                     if (mysqli_num_rows($a1qry) != 0 || mysqli_num_rows($t1qry) != 0) {
                                         ?>
@@ -151,9 +162,17 @@ if ($_SESSION['status'] != "BOSS") {
                                     <!-- วันที่ 2 -->
                                     <?php
                                     $date2 = date("Y-m-d", strtotime(' -1 day'));
-                                    $a2qry = mysqli_query($connection, "SELECT * FROM item_add_record WHERE add_date LIKE '" . $date2 . "' AND add_known LIKE ''")
+                                    $a2qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_add_record"
+                                            . " WHERE add_date <= '" . $date2 . "'"
+                                            . " AND add_known LIKE ''"
+                                            . " AND `adder` LIKE '". $_SESSION['division'] ."'")
                                             or die("a2qry" . mysqli_error($connection));
-                                    $t2qry = mysqli_query($connection, "SELECT * FROM item_take_record WHERE take_date LIKE '" . $date2 . "' AND take_known LIKE ''")
+                                    $t2qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_take_record"
+                                            . " WHERE take_date <= '" . $date2 . "'"
+                                            . " AND take_known LIKE ''"
+                                            . " AND `taker` LIKE '". $_SESSION['division'] ."'")
                                             or die("t2qry" . mysqli_error($connection));
                                     if (mysqli_num_rows($a2qry) != 0 || mysqli_num_rows($t2qry) != 0) {
                                         ?>
@@ -175,9 +194,17 @@ if ($_SESSION['status'] != "BOSS") {
                                     <!-- วันที่ 3 -->
                                     <?php
                                     $date3 = date("Y-m-d", strtotime(' -2 day'));
-                                    $a3qry = mysqli_query($connection, "SELECT * FROM item_add_record WHERE add_date LIKE '" . $date3 . "' AND add_known LIKE ''")
+                                    $a3qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_add_record"
+                                            . " WHERE add_date <= '" . $date3 . "'"
+                                            . " AND add_known LIKE ''"
+                                            . " AND `adder` LIKE '". $_SESSION['division'] ."'")
                                             or die("a3qry" . mysqli_error($connection));
-                                    $t3qry = mysqli_query($connection, "SELECT * FROM item_take_record WHERE take_date LIKE '" . $date3 . "' AND take_known LIKE ''")
+                                    $t3qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_take_record"
+                                            . " WHERE take_date <= '" . $date3 . "'"
+                                            . " AND take_known LIKE ''"
+                                            . " AND `taker` LIKE '". $_SESSION['division'] ."'")
                                             or die("t3qry" . mysqli_error($connection));
                                     if (mysqli_num_rows($a3qry) != 0 || mysqli_num_rows($t3qry) != 0) {
                                         ?>
@@ -199,9 +226,17 @@ if ($_SESSION['status'] != "BOSS") {
                                     <!-- วันที่ 4 -->
                                     <?php
                                     $date4 = date("Y-m-d", strtotime(' -3 day'));
-                                    $a4qry = mysqli_query($connection, "SELECT * FROM item_add_record WHERE add_date LIKE '" . $date4 . "' AND add_known LIKE ''")
+                                    $a4qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_add_record"
+                                            . " WHERE add_date <= '" . $date4 . "'"
+                                            . " AND add_known LIKE ''"
+                                            . " AND `adder` LIKE '". $_SESSION['division'] ."'")
                                             or die("a4qry" . mysqli_error($connection));
-                                    $t4qry = mysqli_query($connection, "SELECT * FROM item_take_record WHERE take_date LIKE '" . $date4 . "' AND take_known LIKE ''")
+                                    $t4qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_take_record"
+                                            . " WHERE take_date <= '" . $date4 . "'"
+                                            . " AND take_known LIKE ''"
+                                            . " AND `taker` LIKE '". $_SESSION['division'] ."'")
                                             or die("t4qry" . mysqli_error($connection));
                                     if (mysqli_num_rows($a4qry) != 0 || mysqli_num_rows($t4qry) != 0) {
                                         ?>
@@ -223,9 +258,17 @@ if ($_SESSION['status'] != "BOSS") {
                                     <!-- วันที่ 5 -->
                                     <?php
                                     $date5 = date("Y-m-d", strtotime(' -4 day'));
-                                    $a5qry = mysqli_query($connection, "SELECT * FROM item_add_record WHERE add_date LIKE '" . $date5 . "' AND add_known LIKE ''")
+                                    $a5qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_add_record"
+                                            . " WHERE add_date <= '" . $date5 . "'"
+                                            . " AND add_known LIKE ''"
+                                            . " AND `adder` LIKE '". $_SESSION['division'] ."'")
                                             or die("a5qry" . mysqli_error($connection));
-                                    $t5qry = mysqli_query($connection, "SELECT * FROM item_take_record WHERE take_date LIKE '" . $date5 . "' AND take_known LIKE ''")
+                                    $t5qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_take_record"
+                                            . " WHERE take_date <= '" . $date5 . "'"
+                                            . " AND take_known LIKE ''"
+                                            . " AND `taker` LIKE '". $_SESSION['division'] ."'")
                                             or die("t5qry" . mysqli_error($connection));
                                     if (mysqli_num_rows($a5qry) != 0 || mysqli_num_rows($t5qry) != 0) {
                                         ?>
@@ -247,9 +290,17 @@ if ($_SESSION['status'] != "BOSS") {
                                     <!-- วันที่ 6 -->
                                     <?php
                                     $date6 = date("Y-m-d", strtotime(' -5 day'));
-                                    $a6qry = mysqli_query($connection, "SELECT * FROM item_add_record WHERE add_date LIKE '" . $date6 . "' AND add_known LIKE ''")
+                                    $a6qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_add_record"
+                                            . " WHERE add_date <= '" . $date6 . "'"
+                                            . " AND add_known LIKE ''"
+                                            . " AND `adder` LIKE '". $_SESSION['division'] ."'")
                                             or die("a6qry" . mysqli_error($connection));
-                                    $t6qry = mysqli_query($connection, "SELECT * FROM item_take_record WHERE take_date LIKE '" . $date6 . "' AND take_known LIKE ''")
+                                    $t6qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_take_record"
+                                            . " WHERE take_date <= '" . $date6 . "'"
+                                            . " AND take_known LIKE ''"
+                                            . " AND `taker` LIKE '". $_SESSION['division'] ."'")
                                             or die("t6qry" . mysqli_error($connection));
                                     if (mysqli_num_rows($a6qry) != 0 || mysqli_num_rows($t6qry) != 0) {
                                         ?>
@@ -272,9 +323,17 @@ if ($_SESSION['status'] != "BOSS") {
                                     <!-- วันที่ 7 -->
                                     <?php
                                     $date7 = date("Y-m-d", strtotime(' -6 day'));
-                                    $a7qry = mysqli_query($connection, "SELECT * FROM item_add_record WHERE add_date LIKE '" . $date7 . "' AND add_known LIKE ''")
+                                    $a7qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_add_record"
+                                            . " WHERE add_date <= '" . $date7 . "'"
+                                            . " AND add_known LIKE ''"
+                                            . " AND `adder` LIKE '". $_SESSION['division'] ."'")
                                             or die("a7qry" . mysqli_error($connection));
-                                    $t7qry = mysqli_query($connection, "SELECT * FROM item_take_record WHERE take_date LIKE '" . $date7 . "' AND take_known LIKE ''")
+                                    $t7qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_take_record"
+                                            . " WHERE take_date <= '" . $date7 . "'"
+                                            . " AND take_known LIKE ''"
+                                            . " AND `taker` LIKE '". $_SESSION['division'] ."'")
                                             or die("t7qry" . mysqli_error($connection));
                                     if (mysqli_num_rows($a7qry) != 0 || mysqli_num_rows($t7qry) != 0) {
                                         ?>
@@ -296,9 +355,17 @@ if ($_SESSION['status'] != "BOSS") {
                                     <!-- วันที่ 8 เป็นต้นไป -->
                                     <?php
                                     $date8 = date("Y-m-d", strtotime(' -7 day'));
-                                    $a8qry = mysqli_query($connection, "SELECT * FROM item_add_record WHERE add_date <= '" . $date8 . "' AND add_known LIKE ''")
+                                    $a8qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_add_record"
+                                            . " WHERE add_date <= '" . $date8 . "'"
+                                            . " AND add_known LIKE ''"
+                                            . " AND `adder` LIKE '". $_SESSION['division'] ."'")
                                             or die("a8qry" . mysqli_error($connection));
-                                    $t8qry = mysqli_query($connection, "SELECT * FROM item_take_record WHERE take_date <= '" . $date8 . "' AND take_known LIKE ''")
+                                    $t8qry = mysqli_query($connection, 
+                                            "SELECT * FROM item_take_record"
+                                            . " WHERE take_date <= '" . $date8 . "'"
+                                            . " AND take_known LIKE ''"
+                                            . " AND `taker` LIKE '". $_SESSION['division'] ."'")
                                             or die("t8qry" . mysqli_error($connection));
                                     if (mysqli_num_rows($a8qry) != 0 || mysqli_num_rows($t8qry) != 0) {
                                         $_SESSION['otherDate'] = date("Y-m-d", strtotime(' -7 day'));
@@ -313,17 +380,18 @@ if ($_SESSION['status'] != "BOSS") {
                                             echo "<div class='label label-success'>ซื้อเพิ่ม</div>" . " " . $rowa8['add_detail'] . " (" . $rowa8['add_qty'] . " " . $rowa8['add_suffix'] . ")" . "<br/>";
                                         }
                                         while ($rowt8 = mysqli_fetch_assoc($t8qry)) {
-                                            echo "<div class='label label-warning'>เบิกใช้</div>" . " " . $rowt8['take_detail'] . " (" . $rowt8['take_qty'] . " " . $rowt8['take_suffix'] . ")" . "<br/>";
+                                            echo "<div class='label label-warning'>เบิกใช้</div>" . " " . $rowt8['take_detail'] . " (" . $rowt8['take_qty'] . " " . $rowt8['take_suffix'] . ")"."<br/>";
                                         }
                                     }
                                     ?>
 
                                     <!-- submit button -->
-                                    <div class="form-group col-md-12" align="center">
+                                    <div class="form-group" align="center" style="margin: 1em">
                                         <button id='submitBtn' class="btn btn-lg btn-success" type="submit">
                                             <span class="glyphicon glyphicon-pencil"></span>&nbsp;ยืนยัน
                                         </button>
                                     </div>  <!-- /submit button -->
+                                    
                                 </form>
                             </div> <!-- /.alert -->
                             <?php

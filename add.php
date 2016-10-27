@@ -45,11 +45,11 @@ if ($_SESSION['status'] != "KEY") {
                 include 'sidebar.php';
                 echo "<div class = 'alert alert-info'>";
                 echo "<b>สถานะ:</b><br/>";
-                if (isset($_SESSION['msg'])) {
-                    foreach ($_SESSION['msg'] as $v) {
+                if (isset($_SESSION['addMsg'])) {
+                    foreach ($_SESSION['addMsg'] as $v) {
                         echo $v . "<br/>";
                     }
-                    unset($_SESSION['msg']);
+                    unset($_SESSION['addMsg']);
                 } else {
                     echo "ยังไม่มีรายการเพิ่มเติม";
                 }
