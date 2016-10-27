@@ -191,7 +191,7 @@ if (isset($_POST['submitBtn'])) {
                         <?php } else { ?>
                             <div class="col-md-12">
                                 <div><b>คำค้น: </b><?= $qryMsg ?> (<?= $divSiteCount ?> รายการ)</div>
-                                <table class="table table-bordered table-condensed table-striped table-hover">
+                                <table id="datatables" class="table table-bordered table-hover table-condensed table-striped nowrap" width="100%" data-display-length='-1'>
                                     <thead>
                                         <tr align="center">
                                             <?php
@@ -235,18 +235,17 @@ if (isset($_POST['submitBtn'])) {
 
 
             <?php include 'main_script.php'; ?>
-            <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.js"></script>
 
             <script>
-                $(document).ready(function () {
-                    $('#example').DataTable({
-                        dom: 'Bfrtip',
-                        buttons: [
-                            'copy', 'csv', 'excel', 'pdf', 'print'
-                        ]
-                    });
+            $(document).ready(function () {
+                $('#datatables').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'excel', 'print', 'colvis'
+                    ]
                 });
-            </script>
+            });
+        </script>
 
     </body>
 </html>

@@ -13,6 +13,7 @@ print_r($_POST);
 
 $_SESSION['lastTakeWorker'] = $_POST['worker'];
 $_SESSION['lastTakeSite'] = $_POST['site'];
+$_SESSION['takeMsg'] = array() ;
 ?>
 
 <?php /*
@@ -27,6 +28,7 @@ $_SESSION['lastTakeSite'] = $_POST['site'];
 
 //CHECK อย่าให้ค่า "-- เลือกผู้ใช้ --" กับ "-- นำไปใช้ที่ --" หลุดมา query เด็ดขาด
 if ($_POST['worker'] == "-- เลือกผู้ใช้ --" || $_POST['site'] == "-- นำไปใช้ที่ --") {
+    array_push($_SESSION['takeMsg'],"Error! ยังไม่ได้เลือกผู้ใช้หรือสถานที่ใช้");
     header("Location: $root_url/show_item.php", true, 302);
 } else {
     echo "inelse";
@@ -35,7 +37,7 @@ if ($_POST['worker'] == "-- เลือกผู้ใช้ --" || $_POST['sit
             . " AND `detail` LIKE '" . $_SESSION['detail'] . "'";
     $itemQry = mysqli_query($connection, $itemQS) or die("itemQry failed: " . mysqli_error($connection));
     $itemResult = mysqli_fetch_assoc($itemQry);
-
+    
 //`user_config` >> อัปเดต `favworker`
     $userCfgUpdQS = "INSERT INTO `user_config` (`cname`,`favworker`) VALUES ('" . $_SESSION['name'] . "','" . $_POST['worker'] . "')"
             . " ON DUPLICATE KEY UPDATE `favworker`='" . $_POST['worker'] . "'";
@@ -48,11 +50,16 @@ if ($_POST['worker'] == "-- เลือกผู้ใช้ --" || $_POST['sit
             . ",'" . date('Y-m-d') . "','" . date('H:i:s') . "'"
             . ",'" . $_SESSION['division'] . "','" . $_POST['worker'] . "','" . $_POST['site'] . "')";
     $itemTakeRecordQry = mysqli_query($connection, $itemTakeRecordQS) or die("itemTakeRecordQry failed: " . mysqli_error($connection));
-
+    if($itemQry){
+        array_push($_SESSION['takeMsg'],"เพิ่มใน:record ...OK!");
+    }
+    
 //หักของออกจาก `item`
     $itemTakeQS = "INSERT INTO `item` (`iid`,`quantity`) VALUES ('" . $itemResult['iid'] . "','" . $itemResult['quantity'] . "') ON DUPLICATE KEY UPDATE `quantity`=`quantity`-" . $_POST['qty'] . ";";
     $itemTakeQry = mysqli_query($connection, $itemTakeQS) or die("itemTakeQS failed: " . mysqli_error($connection));
-
+    if($itemQry){
+        array_push($_SESSION['takeMsg'],"ตัดของจาก:item ...OK!");
+    }
 
     /*
       echo "<br>userCfgUpdQS=<br>";

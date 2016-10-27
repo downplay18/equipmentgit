@@ -192,7 +192,8 @@ if (isset($_POST['submitBtn'])) {
 
 
 
-                        <?php //ตรงนี้แยกเป็นเคส -1, 0, 1, 2, 3 
+                        <?php
+                        //ตรงนี้แยกเป็นเคส -1, 0, 1, 2, 3 
                         //โดยเคส 2,3 ต้องเขียนแยก เพราะคิวรี่เอาสถานที่ใช้งาน ซึ่งต้องดึงจาก :take_record ไม่ใช่ :item
                         if ($case == 2 || $case == 3) {
                             $divSiteQry = mysqli_query($connection, $divSiteQS);
@@ -203,7 +204,7 @@ if (isset($_POST['submitBtn'])) {
                             <?php } else { ?>
                                 <div class="col-md-12">
                                     <div><b>คำค้น: </b><?= $qryMsg ?> (<?= $divSiteCount ?> รายการ)</div>
-                                    <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <table id="datatables" class="table table-bordered table-condensed table-striped table-hover nowrap">
                                         <thead>
                                             <tr align="center">
                                                 <?php
@@ -249,7 +250,7 @@ if (isset($_POST['submitBtn'])) {
                             <?php } else { ?>
                                 <div class="col-md-12">
                                     <div><b>คำค้น: </b><?= $qryMsg ?> (<?= $divSiteCount ?> รายการ)</div>
-                                    <table class="table table-bordered table-condensed table-striped table-hover">
+                                    <table id="datatables" class="table table-bordered table-condensed table-striped table-hover">
                                         <thead>
                                             <tr align="center">
                                                 <?php
@@ -308,14 +309,13 @@ if (isset($_POST['submitBtn'])) {
 
 
             <?php include 'main_script.php'; ?>
-            <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.js"></script>
 
             <script>
                 $(document).ready(function () {
-                    $('#example').DataTable({
+                    $('#datatables').DataTable({
                         dom: 'Bfrtip',
                         buttons: [
-                            'copy', 'csv', 'excel', 'pdf', 'print'
+                            'copy', 'excel', 'print', 'colvis'
                         ]
                     });
                 });

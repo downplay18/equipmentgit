@@ -26,22 +26,22 @@ $_POST['showItemBtn'] = "FIRT TIME VISIT";
 if (isset($_POST['showAddBtn'])) {
     $addTakeQS = "SELECT * FROM `item_add_record` WHERE `add_detail` LIKE '" . $_SESSION['detail'] . "'"
             . " AND `adder` LIKE '" . $_SESSION['owner'] . "'"; //มันแค่เช็ค add ใช้แค่ owner ไม่ใช่ division
-    $addTakeHeader = array('รายการ', 'จน.', 'วัน/เวลา', 'ผู้ลงบันทึกเพิ่ม','สลิป');
-    $addTakeData = array('add_detail', 'add_qty', 'add_suffix', 'add_date', 'add_time', 'adder');
-    $addTakeSize = count($addTakeHeader) ;
+    $addTakeHeader = array('รายการ', 'จำนวน', 'วัน/เวลา', 'ผู้เพิ่ม', 'สลิป');
+    $addTakeData = array('add_detail', 'add_qty', 'add_suffix', 'add_date', 'add_time', 'adder', 'slip');
+    $addTakeSize = count($addTakeHeader);
     $addTakeMsg = "รายการเพิ่มทั้งหมด";
 } elseif (isset($_POST['showTakeBtn'])) {
     $addTakeQS = "SELECT * FROM `item_take_record` WHERE `take_detail` LIKE '" . $_SESSION['detail'] . "'"
             . " AND `taker` LIKE '" . $_SESSION['owner'] . "'";
-    $addTakeHeader = array('รายการ', 'จน.', 'วัน/เวลา', 'ผู้ลงบันทึกเบิก', 'ผู้ใช้งาน', 'สถานที่ใช้งาน');
+    $addTakeHeader = array('รายการ', 'จำนวน', 'วัน/เวลา', 'ผู้เบิก', 'ผู้ใช้งาน', 'สถานที่ใช้งาน');
     $addTakeData = array('take_detail', 'take_qty', 'take_suffix', 'take_date', 'take_time', 'taker', 'worker', 'site');
-    $addTakeSize = count($addTakeHeader) ;
+    $addTakeSize = count($addTakeHeader);
     $addTakeMsg = "รายการเบิกใช้งานทั้งหมด";
 } elseif (isset($_POST['showItemBtn'])) {
     $addTakeQS = "SELECT * FROM `item` WHERE `detail` LIKE '" . $_SESSION['detail'] . "'";
-    $addTakeHeader = array('รายการ', 'จน.', 'เจ้าของ');
+    $addTakeHeader = array('รายการ', 'จำนวน', 'เจ้าของ');
     $addTakeData = array('detail', 'quantity', 'suffix', 'owner');
-    $addTakeSize = count($addTakeHeader) ;
+    $addTakeSize = count($addTakeHeader);
     $addTakeMsg = "รายการคงเหลือปัจจุบัน";
 }
 ?>
@@ -52,7 +52,7 @@ if (isset($_POST['showAddBtn'])) {
         <title>ADMIN</title>
         <!-- Bootstrap Core CSS -->
         <?php include 'main_head.php'; ?>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.css"/>
+
     </head>
 
     <body>
@@ -67,8 +67,8 @@ if (isset($_POST['showAddBtn'])) {
         print_r($_POST);
         ?>
 
-            <div class="row">
-                <div class="container-fluid">
+        <div class="row">
+            <div class="container-fluid">
                 <div class="col-md-12">
 
                     <div class="page-header">
@@ -114,7 +114,9 @@ if (isset($_POST['showAddBtn'])) {
                                     <option>-- เลือกผู้ใช้ --</option>
                                     <?php
                                     //list ลูกจ้างในกลุ่มงานเดียวกัน
-                                    $workerQS = "SELECT `wname`,`wdivision` FROM `worker` WHERE `wdivision` LIKE '" . $_SESSION['division'] . "' ORDER BY `wname` ASC";
+                                    $workerQS = "SELECT `wname` FROM `worker` WHERE `wdivision` LIKE '" . $_SESSION['division'] . "'"
+                                            . " UNION"
+                                            . " SELECT `name` FROM `user` WHERE `division` LIKE '" . $_SESSION['division'] . "'";
                                     $workerQry = mysqli_query($connection, $workerQS);
                                     while ($rowWorker = mysqli_fetch_assoc($workerQry)) {
                                         ?>
@@ -126,6 +128,8 @@ if (isset($_POST['showAddBtn'])) {
                                         <?php } ?>
                                 </select>
                             </div>
+
+
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <select class="form-control" name="site" required="">
@@ -135,17 +139,21 @@ if (isset($_POST['showAddBtn'])) {
                                         $buildingQry = mysqli_query($connection, $buildingQS);
                                         while ($rowBuilding = mysqli_fetch_assoc($buildingQry)) {
                                             ?>
-                                            <option <?php
-                                            if ($rowBuilding['listBuilding'] == $_SESSION['lastTakeSite']) {
-                                                echo 'selected';
-                                            }
-                                            ?>><?php echo $rowBuilding['listBuilding'] ?></option>
-                                            <?php } ?>
+                                            <option><?php echo $rowBuilding['listBuilding'] ?></option>
+                                        <?php } ?>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-1">
                                 <button type="submit" class="btn btn-warning singleSubmitBtn" name="takeSubmit" value="Submit"><span class="glyphicon glyphicon-minus-sign"></span> ลงบันทึกเบิก</button>
+                            </div>
+                            <div class="col-md-1">
+                                <?php
+                                foreach ($_SESSION['takeMsg'] as $val) {
+                                    echo "<font color='red'>".$val . "</font><br/>";
+                                    unset($_SESSION['takeMsg']);
+                                }
+                                ?>
                             </div>
                         </div>
                     </form> <!-- /.form-horizontal -->
@@ -169,7 +177,7 @@ if (isset($_POST['showAddBtn'])) {
                     $addTakeQry = mysqli_query($connection, $addTakeQS) or die("addTakeQry failed: " . mysqli_error($connection));
                     ?>
                     <b>กำลังแสดง: </b><?= $addTakeMsg ?>
-                    <table id="example" class="table table-bordered table-hover table-condensed table-striped" width="100%" data-display-length='-1'>
+                    <table id="datatables" class="table table-bordered table-hover table-condensed table-striped nowrap" width="100%" data-display-length='-1'>
                         <thead>
                             <tr align="center">
                                 <?php
@@ -185,19 +193,20 @@ if (isset($_POST['showAddBtn'])) {
                                 if (isset($_POST['showAddBtn'])) { //CASE แสดงรายการเพิ่ม
                                     echo '<tr align="center">';
                                     echo '<td align="left">' . $rowAddTake[$addTakeData[0]] . '</td>';
-                                    echo '<td>' . $rowAddTake[$addTakeData[1]] .' '. $rowAddTake[$addTakeData[2]] .'</td>';
-                                    echo '<td>' . preg_replace("/(\d+)\D+(\d+)\D+(\d+)/", "$3-$2-$1", $rowAddTake[$addTakeData[3]]).' '. date("H:i", strtotime($rowAddTake[$addTakeData[4]])) .'</td>';
+                                    echo '<td>' . $rowAddTake[$addTakeData[1]] . ' ' . $rowAddTake[$addTakeData[2]] . '</td>';
+                                    echo '<td>' . preg_replace("/(\d+)\D+(\d+)\D+(\d+)/", "$3-$2-$1", $rowAddTake[$addTakeData[3]]) . ' ' . date("H:i", strtotime($rowAddTake[$addTakeData[4]])) . '</td>';
+                                    echo '<td>' . $rowAddTake[$addTakeData[5]] . '</td>';
                                     if ($rowAddTake['slip'] != "") {
-                                    echo '<td width="1%"><a href="' . $rowAddTake['slip'] . '" target=\'_blank\' "><span class="label label-success"><span class="glyphicon glyphicon-file"></span></span></td>';
-                                } else {
-                                    echo '<td width="1%"></td>';
-                                }
+                                        echo '<td width="1%"><a href="' . $rowAddTake['slip'] . '" target=\'_blank\' "><span class="label label-success"><span class="glyphicon glyphicon-file"></span></span></td>';
+                                    } else {
+                                        echo '<td width="1%"></td>';
+                                    }
                                     echo '</tr>';
                                 } elseif (isset($_POST['showTakeBtn'])) {
                                     echo '<tr align="center">';
                                     echo '<td align="left">' . $rowAddTake[$addTakeData[0]] . '</td>';
-                                    echo '<td>' . $rowAddTake[$addTakeData[1]] .' '. $rowAddTake[$addTakeData[2]] .'</td>';
-                                    echo '<td>' . preg_replace("/(\d+)\D+(\d+)\D+(\d+)/", "$3-$2-$1", $rowAddTake[$addTakeData[3]]).' '. date("H:i", strtotime($rowAddTake[$addTakeData[4]])) .'</td>';
+                                    echo '<td>' . $rowAddTake[$addTakeData[1]] . ' ' . $rowAddTake[$addTakeData[2]] . '</td>';
+                                    echo '<td>' . preg_replace("/(\d+)\D+(\d+)\D+(\d+)/", "$3-$2-$1", $rowAddTake[$addTakeData[3]]) . ' ' . date("H:i", strtotime($rowAddTake[$addTakeData[4]])) . '</td>';
                                     echo '<td>' . $rowAddTake[$addTakeData[5]] . '</td>';
                                     echo '<td>' . $rowAddTake[$addTakeData[6]] . '</td>';
                                     echo '<td>' . $rowAddTake[$addTakeData[7]] . '</td>';
@@ -205,7 +214,7 @@ if (isset($_POST['showAddBtn'])) {
                                 } elseif (isset($_POST['showItemBtn'])) {
                                     echo '<tr align="center">';
                                     echo '<td align="left">' . $rowAddTake[$addTakeData[0]] . '</td>';
-                                    echo '<td>' . $rowAddTake[$addTakeData[1]] .' '. $rowAddTake[$addTakeData[2]] .'</td>';
+                                    echo '<td>' . $rowAddTake[$addTakeData[1]] . ' ' . $rowAddTake[$addTakeData[2]] . '</td>';
                                     echo '<td>' . $rowAddTake[$addTakeData[3]] . '</td>';
                                     echo '</tr>';
                                 }
@@ -218,6 +227,7 @@ if (isset($_POST['showAddBtn'])) {
         </div> <!-- /.row -->
 
         <?php include 'main_script.php'; ?>
+        
         <script> /*PREVENT DOUBLE SUBMIT: ทำให้ปุ่ม submit กดได้ครั้งเดียว ป้องกับปัญหาเนต lag แล้ว user กดเบิ้ล มันจะทำให้ส่งค่า 2 เท่า */
             $(document).ready(function () {
                 $("#singleSubmitForm").submit(function () {
@@ -227,29 +237,16 @@ if (isset($_POST['showAddBtn'])) {
             });
         </script>
 
-        <script> /*
-         $(document).ready(function () {
-         $('#example').DataTable({
-         dom: 'Bfrtip',
-         buttons: [
-         'copy', 'csv', 'excel', 'pdf', 'print'
-         ]
-         });
-         }); */
-        </script>
-
         <script>
             $(document).ready(function () {
-                var table = $('#example').DataTable({
-                    lengthChange: false,
-                    buttons: ['copy', 'excel', 'pdf', 'colvis']
+                $('#datatables').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'excel', 'print', 'colvis'
+                    ]
                 });
-
-                table.buttons().container()
-                        .appendTo('#example_wrapper .col-sm-6:eq(0)');
             });
         </script>
-
 
     </body>
 </html>

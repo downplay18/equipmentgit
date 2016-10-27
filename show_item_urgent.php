@@ -56,8 +56,8 @@ if (isset($_GET['detail'])) {
                     $urgentSize = count($urgentHeader);
                     $addTakeQry = mysqli_query($connection, $urgentQS) or die("addTakeQry failed: " . mysqli_error($connection));
                     ?>
-                    <b>กำลังแสดง:</b> รายการ = <?= $_SESSION['urg_detail']?>
-                    <table id="example" class="table table-bordered table-hover table-condensed table-striped" width="100%" data-display-length='-1'>
+                    <b>กำลังแสดง:</b> รายการ = <?= $_SESSION['urg_detail'] ?>
+                    <table id="datatables" class="table table-bordered table-hover table-condensed table-striped nowrap" width="100%" data-display-length='-1'>
                         <thead>
                             <tr align="center">
                                 <th>รายการ</th>
@@ -104,28 +104,17 @@ if (isset($_GET['detail'])) {
         });
     </script>
 
-    <script> /*
-     $(document).ready(function () {
-     $('#example').DataTable({
-     dom: 'Bfrtip',
-     buttons: [
-     'copy', 'csv', 'excel', 'pdf', 'print'
-     ]
-     });
-     }); */
-    </script>
-
     <script>
         $(document).ready(function () {
-            var table = $('#example').DataTable({
-                lengthChange: false,
-                buttons: ['copy', 'excel', 'pdf', 'colvis']
+            $('#datatables').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'excel', 'print', 'colvis'
+                ]
             });
-
-            table.buttons().container()
-                    .appendTo('#example_wrapper .col-sm-6:eq(0)');
         });
     </script>
+
 
 
 </body>

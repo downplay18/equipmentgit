@@ -25,12 +25,12 @@ if ($_SESSION['status'] == "BOSS") { //เพราะ ขี้เกียจ�
     <body>
         <?php
         include("navbar.php");
-        /*
-        echo '<br/>';
-        echo 'SESSION = ';
-        print_r($loginResult);
+        
+        
+        echo 'SESSION = <br/>';
+        print_r($_SESSION);
         echo '<br/>POST = <br/>';
-        print_r($_POST); */
+        print_r($_POST); 
         ?>
 
         <div class="row">
@@ -53,12 +53,12 @@ if ($_SESSION['status'] == "BOSS") { //เพราะ ขี้เกียจ�
                             //<!-- part1 favlist+favCount -->
                             //แสดงรายการที่สนใจที่ user เลือกเอาไว้
                             $favQS = "SELECT `favlist` FROM `user_favlist` WHERE `uid` LIKE " . $_SESSION['user_id']; /* `uid` & `favlist` */
-                            $favQry = mysqli_query($connection, $favQS) or die("<br/>_login_user favQS คิวรี่ล้มเหลว<br/>" . mysqli_error($connection));
+                            $favQry = mysqli_query($connection, $favQS) or die("<br/>_login_user favQS คิวรี่ล้มเหลว: " . mysqli_error($connection));
                             $favRow = mysqli_fetch_assoc($favQry);
                             $favEx = explode("|", $favRow['favlist']); /* $favEx เป็นarray เก็บ iid */
 
-                            $itemQS = "SELECT `iid`,`detail`,`suffix`,`quantity` FROM `item`";
-                            $itemQry = mysqli_query($connection, $itemQS) or die("<br/>_login_user itemQS คิวรี่ล้มเหลว<br/>" . mysql_error());
+                            $itemQS = "SELECT `iid`,`detail`,`suffix`,`quantity` FROM `item` WHERE `owner` LIKE '". $_SESSION['division'] ."'";
+                            $itemQry = mysqli_query($connection, $itemQS) or die("<br/>_login_user itemQS คิวรี่ล้มเหลว: " . mysqli_error($connection));
 
                             //แสดงรายการที่สนใจพร้อมจำนวนปัจจุบันที่เหลืออยู่ ท่ายากตรงที่เก็บ favlist เป็น iid ไม่ใช่ detail
                             $favlistDetail = ""; //เป็น detail ของ favlist

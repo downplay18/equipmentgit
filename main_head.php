@@ -8,10 +8,12 @@
 <!-- Bootstrap Core CSS -->
 <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet" >
 <!-- <link href="css/bootstrap-3.3.7/bootstrap.min.css" rel="stylesheet" type="text/css"/> -->
-<link href="css/datatables/extensions/Buttons/css/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/>
 
 <!-- สำหรับautocomplete ของ add.php -->
 <link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+
+<!-- datatables -->
+<link href="css/datatables/extensions/Buttons/css/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/>
 
 <!-- ทำให้tableใช้ export/print ได้ -->
 <link href="css/datatables/extensions/Buttons/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css"/>
@@ -19,7 +21,7 @@
 <!-- ทำให้tableใช้ live search ได้ -->
 <link href="css/datatables/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
 
-
+<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.css"/> -->
 
 
 <link href="favicon.ico" rel="icon">
