@@ -15,7 +15,7 @@ $(".addmore").on('click', function () {
 
     var data = "<tr><td><input type='checkbox' class='case'/></td><td><span id='snum" + i + "'>" + count + ".</span></td>";
     data += "<td><input class='form-control' type='text' id='zdir_" + i + "' name='var_zdir[]' required/></td> \n\
-<td><input class='form-control' type='text' id='varDetail_" + i + "' name='varDetail[]' required/></td> \n\
+<td><input class='form-control' type='text' id='varDetail_" + i + "' name='varDetail[]' maxlength=\"100\" required/></td> \n\
 <td><input class='form-control' type='text' id='var_slipSuffix_" + i + "' name='var_slipSuffix[]' required/></td> \n\
 <td><input class='form-control' type='number' id='var_qty_" + i + "' name='var_qty[]' required/></td> \n\
 <td><input class='form-control' type='number' id='var_unitPrice_" + i + "' name='var_unitPrice[]' required/></td> \n\

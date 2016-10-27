@@ -26,25 +26,23 @@ $_POST['showItemBtn'] = "FIRT TIME VISIT";
 if (isset($_POST['showAddBtn'])) {
     $addTakeQS = "SELECT * FROM `item_add_record` WHERE `add_detail` LIKE '" . $_SESSION['detail'] . "'"
             . " AND `adder` LIKE '" . $_SESSION['owner'] . "'"; //มันแค่เช็ค add ใช้แค่ owner ไม่ใช่ division
-    $addTakeSize = 6;
-    $addTakeHeader = array('รายการ', 'จน.', 'วัน/เวลา', 'ผู้ลงบันทึกเพิ่ม');
+    $addTakeHeader = array('รายการ', 'จน.', 'วัน/เวลา', 'ผู้ลงบันทึกเพิ่ม','สลิป');
     $addTakeData = array('add_detail', 'add_qty', 'add_suffix', 'add_date', 'add_time', 'adder');
+    $addTakeSize = count($addTakeHeader) ;
     $addTakeMsg = "รายการเพิ่มทั้งหมด";
 } elseif (isset($_POST['showTakeBtn'])) {
     $addTakeQS = "SELECT * FROM `item_take_record` WHERE `take_detail` LIKE '" . $_SESSION['detail'] . "'"
             . " AND `taker` LIKE '" . $_SESSION['owner'] . "'";
-    $addTakeSize = 8;
     $addTakeHeader = array('รายการ', 'จน.', 'วัน/เวลา', 'ผู้ลงบันทึกเบิก', 'ผู้ใช้งาน', 'สถานที่ใช้งาน');
     $addTakeData = array('take_detail', 'take_qty', 'take_suffix', 'take_date', 'take_time', 'taker', 'worker', 'site');
+    $addTakeSize = count($addTakeHeader) ;
     $addTakeMsg = "รายการเบิกใช้งานทั้งหมด";
 } elseif (isset($_POST['showItemBtn'])) {
     $addTakeQS = "SELECT * FROM `item` WHERE `detail` LIKE '" . $_SESSION['detail'] . "'";
-    $addTakeSize = 4;
     $addTakeHeader = array('รายการ', 'จน.', 'เจ้าของ');
     $addTakeData = array('detail', 'quantity', 'suffix', 'owner');
+    $addTakeSize = count($addTakeHeader) ;
     $addTakeMsg = "รายการคงเหลือปัจจุบัน";
-} elseif (isset($_POST['slipBtn'])) {
-    
 }
 ?>
 
@@ -161,9 +159,7 @@ if (isset($_POST['showAddBtn'])) {
                             <button class="btn btn-default" type="submit" name="showTakeBtn" value="submit"><span class="glyphicon glyphicon-fire"></span> แสดงรายการเบิก</button>
                             <button class="btn btn-default" type="submit" name="showItemBtn" value="submit"><span class="glyphicon glyphicon-thumbs-up"></span> แสดงรายการคงเหลือปัจจุบัน</button>
                         </div>
-                        <div class="btn btn-group" style="float: right">
-                            <button class="btn btn-default" type="submit" name="slipBtn" value="submit"><span class="glyphicon glyphicon-file"></span> ดูสลิป</button>
-                        </div>
+                        <div class="btn btn-group" style="float: right"></div>
                     </div>
                 </form>
 
@@ -191,7 +187,11 @@ if (isset($_POST['showAddBtn'])) {
                                     echo '<td align="left">' . $rowAddTake[$addTakeData[0]] . '</td>';
                                     echo '<td>' . $rowAddTake[$addTakeData[1]] .' '. $rowAddTake[$addTakeData[2]] .'</td>';
                                     echo '<td>' . preg_replace("/(\d+)\D+(\d+)\D+(\d+)/", "$3-$2-$1", $rowAddTake[$addTakeData[3]]).' '. date("H:i", strtotime($rowAddTake[$addTakeData[4]])) .'</td>';
-                                    echo '<td>' . $rowAddTake[$addTakeData[5]] . '</td>';
+                                    if ($rowAddTake['slip'] != "") {
+                                    echo '<td width="1%"><a href="' . $rowAddTake['slip'] . '" target=\'_blank\' "><span class="label label-success"><span class="glyphicon glyphicon-file"></span></span></td>';
+                                } else {
+                                    echo '<td width="1%"></td>';
+                                }
                                     echo '</tr>';
                                 } elseif (isset($_POST['showTakeBtn'])) {
                                     echo '<tr align="center">';

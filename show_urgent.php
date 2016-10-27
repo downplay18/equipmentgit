@@ -77,7 +77,7 @@ if (isset($_POST['submitBtn'])) {
             . " GROUP BY `urg_detail`,`urg_adder`,`urg_suffix`";
     $tableHeader = array("รายการ", "จำนวนรวม", "หน่วย", "เจ้าของ");
     $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_adder");
-    $qryMsg = "รายการสั่งซื้อแบบปกติทั้งหมด";
+    $qryMsg = "รายการสั่งซื้อ(เร่งด่วน) ทั้งหมด";
     $_SESSION['lastDiv'] = "-- แยกตามกลุ่มงาน --";
     $_SESSION['lastSite'] = "-- แยกตามสถานที่ใช้งาน --";
 }

@@ -14,11 +14,11 @@ $(".addmore").on('click', function () {
     count = $('table tr').length;
 
     var data = "<tr><td><input type='checkbox' class='case'/></td><td><span id='snum" + i + "'>" + count + ".</span></td>";
-    data += "<td><input class='form-control' type='text' id='varDetail_" + i + "' name='varDetail[]'/></td> \n\
-<td><input class='form-control' type='text' id='var_slipSuffix_" + i + "' name='var_slipSuffix[]'/></td> \n\
-<td><input class='form-control' type='number' id='var_qty_" + i + "' name='var_qty[]'/></td> \n\
-<td><input class='form-control' type='number' id='var_unitPrice_" + i + "' name='var_unitPrice[]'/></td> \n\
-<td><input class='form-control' type='number' id='var_amount_" + i + "' name='var_amount[]'/></td>\n\
+    data += "<td><input class='form-control' type='text' id='varDetail_" + i + "' name='varDetail[]' maxlength=\"100\" required/></td> \n\
+<td><input class='form-control' type='text' id='var_slipSuffix_" + i + "' name='var_slipSuffix[]' required/></td> \n\
+<td><input class='form-control' type='number' id='var_qty_" + i + "' name='var_qty[]' required/></td> \n\
+<td><input class='form-control' type='number' id='var_unitPrice_" + i + "' name='var_unitPrice[]' required/></td> \n\
+<td><input class='form-control' type='number' id='var_amount_" + i + "' name='var_amount[]' required/></td>\n\
 </tr>";
     $('table').append(data);
     //row = i;
