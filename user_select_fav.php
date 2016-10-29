@@ -96,7 +96,7 @@ require("connection.php");
                         /* เรียก `iid`กับ `detail` มาแสดงให้ user เอาไว้เลือก */
                         //$qryArr = array('detail');
                         //$qryArr_size = count($qryArr);
-                        $qstatement = "SELECT `iid`,`detail`,`suffix`,`quantity` FROM `item` WHERE `owner` LIKE '". $_SESSION['division'] ."'";
+                        $qstatement = "SELECT `iid`,`detail`,`suffix`,`quantity`,`owner` FROM `item` WHERE `owner` LIKE '". $_SESSION['division'] ."'";
                         $itemQuery = mysqli_query($connection, $qstatement) or die("<br/>user_select_fav item table คิวรี่ล้มเหลว!<br/>" . mysql_error());
                         $count = mysqli_num_rows($itemQuery);
                         echo "<br/>มีทั้งหมด " . $count . " รายการ<br/>";

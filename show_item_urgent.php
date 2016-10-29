@@ -31,11 +31,11 @@ if (isset($_GET['detail'])) {
         /* navbar */
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
         include 'navbar.php';
-
+        /*
         echo 'SESSION = ';
         print_r($_SESSION);
         echo '<br/>POST = <br/>';
-        print_r($_POST);
+        print_r($_POST); */
         ?>
 
         <div class="row">

@@ -23,12 +23,12 @@ if ($_SESSION['status'] != "KEY") {
 
         <?php
         include("navbar.php");
-
+        /*
         echo '<br/>';
         echo 'SESSION = ';
         print_r($_SESSION);
         echo '<br/>POST = <br/>';
-        print_r($_POST);
+        print_r($_POST); */
         /*
           $test = array(x,'y',z);
           $test1 = array();
