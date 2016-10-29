@@ -1,6 +1,5 @@
 
-
-<script src="js/jquery-1.12.2.min.js" type="text/javascript"></script>
+<script src="js/jquery-1.12.3.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js"></script>
 <!-- <script src="js/bootstrap-3.3.7/bootstrap.min.js" type="text/javascript"></script> -->
 
@@ -17,5 +16,5 @@
 <script src="datatables/buttons.html5.min.js" type="text/javascript"></script> <!-- 1.2.2 -->
 <script src="datatables/buttons.print.min.js" type="text/javascript"></script> <!-- 1.2.2 -->
 
-<script src="datatables/buttons.bootstrap.min.js" type="text/javascript"></script>
+ <script src="datatables/buttons.bootstrap.min.js" type="text/javascript"></script> 
 <script src="datatables/buttons.colVis.js" type="text/javascript"></script>

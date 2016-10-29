@@ -13,7 +13,7 @@
 <link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
 
 <!-- datatables -->
-<link href="css/datatables/extensions/Buttons/css/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+<!-- <link href="css/datatables/extensions/Buttons/css/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/> -->
 
 <!-- ทำให้tableใช้ export/print ได้ -->
 <link href="css/datatables/extensions/Buttons/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css"/>

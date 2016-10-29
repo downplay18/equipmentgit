@@ -99,10 +99,10 @@ if (isset($_POST['submitBtn'])) {
         include 'navbar.php';
 
         /*
-        echo 'SESSION = ';
-        print_r($_SESSION);
-        echo '<br/>POST = <br/>';
-        print_r($_POST); */
+          echo 'SESSION = ';
+          print_r($_SESSION);
+          echo '<br/>POST = <br/>';
+          print_r($_POST); */
         ?>
 
         <div class="row">
@@ -191,7 +191,7 @@ if (isset($_POST['submitBtn'])) {
                         <?php } else { ?>
                             <div class="col-md-12">
                                 <div><b>คำค้น: </b><?= $qryMsg ?> (<?= $divSiteCount ?> รายการ)</div>
-                                <table id="datatables" class="table table-bordered table-hover table-condensed table-striped nowrap" width="100%" data-display-length='-1'>
+                                <table id="example" class="table table-bordered table-hover table-condensed table-striped nowrap" width="100%" data-display-length='-1'>
                                     <thead>
                                         <tr align="center">
                                             <?php
@@ -237,15 +237,21 @@ if (isset($_POST['submitBtn'])) {
             <?php include 'main_script.php'; ?>
 
             <script>
-            $(document).ready(function () {
-                $('#datatables').DataTable({
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copy', 'excel', 'print', 'colvis'
-                    ]
+                $(document).ready(function () {
+                    var table = $('#example').DataTable({
+                        dom:
+                                "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                                "<'row'<'col-sm-12'tr>>" +
+                                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                        lengthChange: false,
+                        buttons: ['copy', 'excel', 'print', 'colvis']
+                    });
+
+
+                    table.buttons().container()
+                            .appendTo($('#example_wrapper .col-sm-6:eq(0)'));
                 });
-            });
-        </script>
+            </script>
 
     </body>
 </html>

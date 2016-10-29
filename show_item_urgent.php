@@ -32,10 +32,10 @@ if (isset($_GET['detail'])) {
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
         include 'navbar.php';
         /*
-        echo 'SESSION = ';
-        print_r($_SESSION);
-        echo '<br/>POST = <br/>';
-        print_r($_POST); */
+          echo 'SESSION = ';
+          print_r($_SESSION);
+          echo '<br/>POST = <br/>';
+          print_r($_POST); */
         ?>
 
         <div class="row">
@@ -57,7 +57,7 @@ if (isset($_GET['detail'])) {
                     $addTakeQry = mysqli_query($connection, $urgentQS) or die("addTakeQry failed: " . mysqli_error($connection));
                     ?>
                     <b>กำลังแสดง:</b> รายการ = <?= $_SESSION['urg_detail'] ?>
-                    <table id="datatables" class="table table-bordered table-hover table-condensed table-striped nowrap" width="100%" data-display-length='-1'>
+                    <table id="example" class="table table-bordered table-hover table-condensed table-striped nowrap" width="100%" data-display-length='-1'>
                         <thead>
                             <tr align="center">
                                 <th>รายการ</th>
@@ -106,12 +106,18 @@ if (isset($_GET['detail'])) {
 
     <script>
         $(document).ready(function () {
-            $('#datatables').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'excel', 'print', 'colvis'
-                ]
+            var table = $('#example').DataTable({
+                dom:
+                        "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                        "<'row'<'col-sm-12'tr>>" +
+                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                lengthChange: false,
+                buttons: ['copy', 'excel', 'print', 'colvis']
             });
+
+
+            table.buttons().container()
+                    .appendTo($('#example_wrapper .col-sm-6:eq(0)'));
         });
     </script>
 
