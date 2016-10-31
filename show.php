@@ -25,7 +25,7 @@ $qryMsg = "";
 
 if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || empty($_POST['divName']) || isset($_POST['submitAll'])) {
     //กดปุ่ม แสดงทั้งหมด
-    echo "SHOW ALL";
+    //echo "SHOW ALL";
     unset($_SESSION['lastDiv']);
     unset($_POST['divName']);
     unset($queryMsg);
@@ -35,7 +35,7 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
     $tableData = array("detail", "quantity", "suffix", "owner");
     $qryMsg = "แสดงทั้งหมด";
 } else { //แสดงเฉพาะที่เลือก
-    echo 'SHOW SELECTED';
+    //echo 'SHOW SELECTED';
     $divSiteQS = "SELECT `detail`,`quantity`,`suffix`,`owner`"
             . " FROM `item`"
             . " WHERE `owner`"
@@ -62,11 +62,11 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
         /* ไม่ใช้ case unauthen เพราะไม่มีสิทธิ์เข้าหน้านี้อยู่แล้ว */
         include 'navbar.php';
 
-
+        /*
         echo 'SESSION = ';
         print_r($_SESSION);
         echo '<br/>POST = <br/>';
-        print_r($_POST);
+        print_r($_POST); */
         ?>
 
         <div class="row">
