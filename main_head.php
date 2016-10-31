@@ -15,13 +15,13 @@
 <!-- datatables -->
 <!-- <link href="css/datatables/extensions/Buttons/css/buttons.bootstrap.min.css" rel="stylesheet" type="text/css"/> -->
 
-<!-- ทำให้tableใช้ export/print ได้ -->
-<link href="css/datatables/extensions/Buttons/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css"/>
+<!-- ทำให้tableใช้ export/print ได้ 
+<link href="css/datatables/extensions/Buttons/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css"/> -->
 
 <!-- ทำให้tableใช้ live search ได้ -->
-<link href="css/datatables/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+<link href="datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
 
-<!-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.css"/> -->
+<link href="datatables/datatables.min.css" rel="stylesheet" type="text/css"/>
 
 
 <link href="favicon.ico" rel="icon">

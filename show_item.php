@@ -26,19 +26,19 @@ $_POST['showItemBtn'] = "FIRT TIME VISIT";
 if (isset($_POST['showAddBtn'])) {
     $addTakeQS = "SELECT * FROM `item_add_record` WHERE `add_detail` LIKE '" . $_SESSION['detail'] . "'"
             . " AND `adder` LIKE '" . $_SESSION['owner'] . "'"; //มันแค่เช็ค add ใช้แค่ owner ไม่ใช่ division
-    $addTakeHeader = array('รายการ', 'จำนวน', 'วัน/เวลา', 'ผู้เพิ่ม', 'สลิป');
+    $addTakeHeader = array('รายการ', 'จำนวน', 'วัน/เวลาเพิ่ม', 'ผู้เพิ่ม', 'ใบเสร็จ');
     $addTakeData = array('add_detail', 'add_qty', 'add_suffix', 'add_date', 'add_time', 'adder', 'slip');
     $addTakeSize = count($addTakeHeader);
     $addTakeMsg = "รายการเพิ่มทั้งหมด";
 } elseif (isset($_POST['showTakeBtn'])) {
     $addTakeQS = "SELECT * FROM `item_take_record` WHERE `take_detail` LIKE '" . $_SESSION['detail'] . "'"
             . " AND `taker` LIKE '" . $_SESSION['owner'] . "'";
-    $addTakeHeader = array('รายการ', 'จำนวน', 'วัน/เวลา', 'ผู้เบิก', 'ผู้ใช้งาน', 'สถานที่ใช้งาน');
+    $addTakeHeader = array('รายการ', 'จำนวน', 'วัน/เวลาเบิก', 'ผู้เบิก', 'ผู้ใช้งาน', 'สถานที่ใช้งาน');
     $addTakeData = array('take_detail', 'take_qty', 'take_suffix', 'take_date', 'take_time', 'taker', 'worker', 'site');
     $addTakeSize = count($addTakeHeader);
     $addTakeMsg = "รายการเบิกใช้งานทั้งหมด";
 } elseif (isset($_POST['showItemBtn'])) {
-    $addTakeQS = "SELECT * FROM `item` WHERE `detail` LIKE '" . $_SESSION['detail'] . "'";
+    $addTakeQS = "SELECT * FROM `item` WHERE `detail` LIKE '" . $_SESSION['detail'] . "' AND `owner` LIKE '" . $_SESSION['division'] . "'";
     $addTakeHeader = array('รายการ', 'จำนวน', 'เจ้าของ');
     $addTakeData = array('detail', 'quantity', 'suffix', 'owner');
     $addTakeSize = count($addTakeHeader);
@@ -145,7 +145,7 @@ if (isset($_POST['showAddBtn'])) {
                                 </div>
                             </div>
                             <div class="col-md-1">
-                                <button type="submit" class="btn btn-warning singleSubmitBtn" name="takeSubmit" value="Submit"><span class="glyphicon glyphicon-minus-sign"></span> ลงบันทึกเบิก</button>
+                                <button type="submit" class="btn btn-danger singleSubmitBtn" name="takeSubmit" value="Submit"><span class="glyphicon glyphicon-minus-sign"></span> ลงบันทึกเบิก</button>
                             </div>
                             <div class="col-md-1">
                                 <?php
@@ -163,8 +163,8 @@ if (isset($_POST['showAddBtn'])) {
                 <form action="" method="post">
                     <div class="col-md-12" style="padding: 10px">
                         <div class="btn btn-group" style="float: left">
-                            <button class="btn btn-default" type="submit" name="showAddBtn" value="submit"><span class="glyphicon glyphicon-leaf"></span> แสดงรายการเพิ่ม</button>
-                            <button class="btn btn-default" type="submit" name="showTakeBtn" value="submit"><span class="glyphicon glyphicon-fire"></span> แสดงรายการเบิก</button>
+                            <button class="btn btn-success" type="submit" name="showAddBtn" value="submit"><span class="glyphicon glyphicon-leaf"></span> แสดงรายการเพิ่ม</button>
+                            <button class="btn btn-warning" type="submit" name="showTakeBtn" value="submit"><span class="glyphicon glyphicon-fire"></span> แสดงรายการเบิก</button>
                             <button class="btn btn-default" type="submit" name="showItemBtn" value="submit"><span class="glyphicon glyphicon-thumbs-up"></span> แสดงรายการคงเหลือปัจจุบัน</button>
                         </div>
                         <div class="btn btn-group" style="float: right"></div>

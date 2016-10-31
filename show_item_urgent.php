@@ -23,7 +23,6 @@ if (isset($_GET['detail'])) {
         <title>ADMIN</title>
         <!-- Bootstrap Core CSS -->
         <?php include 'main_head.php'; ?>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.css"/>
     </head>
 
     <body>
@@ -66,7 +65,7 @@ if (isset($_GET['detail'])) {
                                 <th>ผู้ลงบันทึก</th>
                                 <th>ใช้เพื่อ</th>
                                 <th>ใช้ที่</th>
-                                <th>สลิป</th>
+                                <th>ใบเสร็จ</th>
                             </tr>
                         </thead>
                         <tbody>
