@@ -22,66 +22,33 @@ $tableHeader = "";
 $tableData = "";
 $qryMsg = "";
 
-if (isset($_POST['submitBtn'])) {
-    $_SESSION['lastDiv'] = $_POST['divName'];
-    $_SESSION['lastSite'] = $_POST['siteName'];
-    do {
-        //ไม่ได้เลือก
-        if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" && $_POST['siteName'] == "-- แยกตามสถานที่ใช้งาน --") {
-            //echo '1-- แยกตามกลุ่มงาน -- -- แยกตามสถานที่ใช้งาน --';
-            $qryMsg = "(ไม่มีค่าที่เลือก)";
-            break;
-        }
-        //เลือกทั้งกลุ่มงาน+สถานที่ใช้งาน
-        if ($_POST['divName'] != "-- แยกตามกลุ่มงาน --" && $_POST['siteName'] != "-- แยกตามสถานที่ใช้งาน --") {
-            //echo '99 เลือกทั้งกลุ่มงานและสถานที่ใช้งาน';
-            $urgentQS = "SELECT `urg_detail`, SUM(`urg_qty`) as sum_urgQty, `urg_suffix`,`urg_site`, `urg_adder`"
-                    . "FROM `item_urgent_record` "
-                    . "WHERE `urg_adder` LIKE '" . $_POST['divName'] . "'"
-                    . " AND `urg_site` LIKE '" . $_POST['siteName'] . "'"
-                    . " GROUP BY `urg_detail`,`urg_suffix`,`urg_site`,`urg_adder`";
-            $tableHeader = array("รายการ", "จำนวนรวม", "ใช้ที่", "เจ้าของ");
-            $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_site", "urg_adder");
-            $qryMsg = $_POST['divName'] . ", " . $_POST['siteName'];
-            break;
-        }
-        //เลือกเฉพาะกลุ่มงาน
-        if ($_POST['divName'] != "-- แยกตามกลุ่มงาน --") {
-            //echo '2-- แยกตามกลุ่มงาน --';
-            $urgentQS = "SELECT `urg_detail`, SUM(`urg_qty`) as sum_urgQty, `urg_suffix`, `urg_adder`"
-                    . " FROM `item_urgent_record`"
-                    . " WHERE `urg_adder` LIKE '" . $_POST['divName'] . "'"
-                    . " GROUP BY `urg_detail`,`urg_suffix`";
-            $tableHeader = array("รายการ", "จำนวนรวม", "เจ้าของ");
-            $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_adder");
-            $qryMsg = $_POST['divName'];
-            break;
-        }
-        //เลือกเฉพาะสถานที่ใช้งาน
-        if ($_POST['siteName'] != "-- แยกตามสถานที่ใช้งาน --") {
-            //echo '3-- แยกตามสถานที่ใช้งาน --';
-            $urgentQS = "SELECT `urg_detail`,SUM(`urg_qty`) as sum_urgQty,`urg_suffix`,`urg_site`"
-                    . " FROM `item_urgent_record`"
-                    . " WHERE `urg_site` LIKE '" . $_POST['siteName'] . "'"
-                    . " GROUP BY `urg_detail`,`urg_suffix`";
-            $tableHeader = array("รายการ", "จำนวน", "ใช้ที่");
-            $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_site");
-            $qryMsg = $_POST['siteName'];
-            break;
-        }
-    } while (0);
-} else { //กดปุ่ม แสดงทั้งหมด
-    //echo "enter else";
+if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || empty($_POST['divName']) || isset($_POST['submitAll'])) {
+    //SHOW ALL
+    //echo 'show all';
+    unset($_SESSION['lastDiv']);
+    unset($_POST['divName']);
+    unset($queryMsg);
     $urgentQS = "SELECT `urg_detail`,SUM(`urg_qty`) as sum_urgQty,`urg_suffix`,`urg_adder`,`urg_purpose`"
             . " FROM `item_urgent_record`"
             . " GROUP BY `urg_detail`,`urg_adder`,`urg_suffix`";
     $tableHeader = array("รายการ", "จำนวนรวม", "เจ้าของ");
     $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_adder");
-    $qryMsg = "รายการสั่งซื้อ(เร่งด่วน) ทั้งหมด";
-    $_SESSION['lastDiv'] = "-- แยกตามกลุ่มงาน --";
-    $_SESSION['lastSite'] = "-- แยกตามสถานที่ใช้งาน --";
+    $qryMsg = "แสดงทั้งหมด";
+} else {
+    //SHOW SELECTED
+    //echo 'show selected';
+    $urgentQS = "SELECT `urg_detail`, SUM(`urg_qty`) as sum_urgQty, `urg_suffix`, `urg_adder`"
+            . " FROM `item_urgent_record`"
+            . " WHERE `urg_adder` LIKE '" . $_POST['divName'] . "'"
+            . " GROUP BY `urg_detail`,`urg_suffix`";
+    $tableHeader = array("รายการ", "จำนวนรวม", "เจ้าของ");
+    $tableData = array("urg_detail", "sum_urgQty", "urg_suffix", "urg_adder");
+    $qryMsg = $_POST['divName'];
+    $_SESSION['lastDiv'] = $_POST['divName'];
 }
 ?>
+
+
 
 <html>
     <head>
@@ -99,10 +66,10 @@ if (isset($_POST['submitBtn'])) {
         include 'navbar.php';
 
         /*
-          echo 'SESSION = ';
-          print_r($_SESSION);
-          echo '<br/>POST = <br/>';
-          print_r($_POST); */
+        echo 'SESSION = ';
+        print_r($_SESSION);
+        echo '<br/>POST = <br/>';
+        print_r($_POST); */
         ?>
 
         <div class="row">
@@ -147,31 +114,11 @@ if (isset($_POST['submitBtn'])) {
                                         <?php } ?>
                                     </select>
                                 </div> <!-- /.col-md-3 -->
-                                <div class="col-md-3">
-                                    <select id="selBuilding" class="form-control" name="siteName">
-                                        <option>-- แยกตามสถานที่ใช้งาน --</option>
-                                        <?php
-                                        //เรียก list ตุกทั้งหมด
-                                        $siteQS = "SELECT `listBuilding` FROM `list_building` ORDER BY `buildingID` ASC";
-                                        $siteQry = mysqli_query($connection, $siteQS);
-                                        while ($rowSite = mysqli_fetch_assoc($siteQry)) {
-                                            ?>
-                                            <option 
-                                            <?php
-                                            //แยกตามสถานที่ใช้งานล่าสุด
-                                            if ($rowSite['listBuilding'] == $_SESSION['lastSite']) {
-                                                echo 'selected';
-                                            }
-                                            ?>>
-                                                <?= $rowSite['listBuilding']; ?></option>
-                                        <?php } ?>
-                                    </select>
-                                </div> <!-- /.col-md-3 -->
                                 <div class="col-md-1">
                                     <button class="btn btn-success" type="submit" name="submitBtn" value="submit" autofocus=""><span class="glyphicon glyphicon-search"></span> ค้นหา</button>
                                 </div>
                                 <div class="col-md-1">
-                                    <button class="btn btn-default" type="submit" name="SubmitAll" value="submit"><span class="glyphicon glyphicon-list"></span> แสดงทั้งหมด</button>
+                                    <button class="btn btn-default" type="submit" name="submitAll" value="-- แยกตามกลุ่มงาน --"><span class="glyphicon glyphicon-list"></span> แสดงทั้งหมด</button>
                                 </div>
                             </form>
 
