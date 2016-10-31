@@ -19,10 +19,10 @@ if ($_POST['newKeyItem'] != "") {
     $nkCheckQry = mysqli_query($connection, "SELECT `key_detail` FROM `key_item` WHERE `key_detail`='" . $_POST['newKeyItem'] . "'");
     $num_rows = mysqli_num_rows($nkCheckQry);
     if ($num_rows) { //เช็คแล้วเจอซํ้า
-        array_push($keyMsg, "<font color='red'>ชื่อซํ้า! มีอยู่แล้วในฐานข้อมูล!</font>");
+        array_push($keyMsg, "<font color='red'>ชื่อซํ้า! <u>" . $_POST['newKeyItem'] . "</u> มีอยู่แล้วในฐานข้อมูล!</font>");
     } else { //ไม่เจอซํ้า เพิ่มเข้าไปใน :key_item
         $keyItemAddQry = mysqli_query($connection, "INSERT INTO `key_item` (`key_detail`) VALUES ('" . $_POST['newKeyItem'] . "')");
-        array_push($keyMsg, "<font color='blue'>เพิ่มรายการ " . $_POST['newKeyItem'] . " ในฐานข้อมูลสำเร็จ!</font>");
+        array_push($keyMsg, "<font color='blue'>เพิ่มรายการ <u>" . $_POST['newKeyItem'] . "</u> ในฐานข้อมูลสำเร็จ!</font>");
     }
 }
 ?>
@@ -111,7 +111,7 @@ if ($_POST['newKeyItem'] != "") {
 
                                 <form id="mainForm" action="" method="post">
                                     <h4>เพิ่มชื่อเครื่องมือเครื่องใช้</h4>
-                                    ***เพิ่มชื่อเครื่องมือเครื่องใช้ใหม่ โปรดตรวจสอบให้แน่ใจว่าไม่มีรายการซํ้าซ้อน <br/><br/>
+                                    ***เพิ่มชื่อเครื่องมือเครื่องใช้ใหม่ โปรดตรวจสอบให้แน่ใจว่าชื่อที่ต้องการเพิ่ม ไม่ซํ้าซ้อนกับตารางชื่อที่มีอยู่แล้วในตารางทางซ้าย <br/><br/>
                                     <?php
                                     foreach ($keyMsg as $msg) {
                                         echo "<p align='center' style='font-size: 135%'>" . $msg . "</p><br/>";
