@@ -20,14 +20,12 @@ if (isset($_SESSION['user_id'])) {
 
         <?php
         include("navbar.php");
-
+        /*
         echo '<br/>';
         echo 'SESSION = ';
         print_r($_SESSION);
-        //echo '<br/>loginResult =<br/>';
-        //print_r($loginResult);
         echo '<br/>POST = <br/>';
-        print_r($_POST);
+        print_r($_POST); */
         ?>
 
         <div class="row">
