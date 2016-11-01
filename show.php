@@ -29,10 +29,14 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
     unset($_SESSION['lastDiv']);
     unset($_POST['divName']);
     unset($queryMsg);
-    $divSiteQS = "SELECT `detail`,`quantity`,`suffix`,`owner`"
-            . " FROM `item`";
-    $tableHeader = array("รายการ", "คงเหลือ", "เจ้าของ");
-    $tableData = array("detail", "quantity", "suffix", "owner");
+    $divSiteQS = "SELECT detail,quantity,suffix,max(add_date) as maxAddDate,add_qty,add_suffix,owner,adder,slip
+        FROM item
+        LEFT JOIN item_add_record
+        ON item.detail = item_add_record.add_detail
+        AND item.owner = item_add_record.adder
+        GROUP BY adder,detail";
+    $tableHeader = array("รายการ", "คงเหลือ","เพิ่มล่าสุด", "เจ้าของ");
+    $tableData = array("detail", "quantity", "suffix","maxAddDate","add_qty","add_suffix", "owner");
     $qryMsg = "แสดงทั้งหมด";
 } else { //แสดงเฉพาะที่เลือก
     //echo 'SHOW SELECTED';
@@ -53,7 +57,6 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
         <title>ADMIN</title>
         <!-- Bootstrap Core CSS -->
         <?php include 'main_head.php'; ?>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jqc-1.12.3/dt-1.10.12/datatables.min.css"/>
     </head>
 
     <body>
@@ -63,10 +66,10 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
         include 'navbar.php';
 
         /*
-        echo 'SESSION = ';
-        print_r($_SESSION);
-        echo '<br/>POST = <br/>';
-        print_r($_POST); */
+          echo 'SESSION = ';
+          print_r($_SESSION);
+          echo '<br/>POST = <br/>';
+          print_r($_POST); */
         ?>
 
         <div class="row">
@@ -162,13 +165,8 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
                                                     </a>
                                                 </td>
                                                 <td nowrap><?= $rowDivSite[$tableData[1]] . ' ' . $rowDivSite[$tableData[2]] ?></td>
-                                                <td><?= $rowDivSite[$tableData[3]] ?></td>
-                                                <?php if (isset($rowDivSite[$tableData[4]])) { ?>
-                                                    <td><?= $rowDivSite[$tableData[4]] ?></td>
-                                                <?php } ?>
-                                                <?php if (isset($rowDivSite[$tableData[5]])) { ?>
-                                                    <td><?= $rowDivSite[$tableData[5]] ?></td>
-                                                <?php } ?>
+                                                <td align="left"><?= date("d/m/Y",strtotime($rowDivSite[$tableData[3]]))." <p class='label label-success'>+ ". $rowDivSite[$tableData[4]]." ".$rowDivSite[$tableData[5]]."</p>" ?></td>
+                                                <td><?= $rowDivSite[$tableData[6]] ?></td>
                                             </tr>
                                         <?php } ?>
 

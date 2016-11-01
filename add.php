@@ -24,11 +24,11 @@ if ($_SESSION['status'] != "KEY") {
         <?php
         include("navbar.php");
         /*
-        echo '<br/>';
-        echo 'SESSION = ';
-        print_r($_SESSION);
-        echo '<br/>POST = <br/>';
-        print_r($_POST); */
+          echo '<br/>';
+          echo 'SESSION = ';
+          print_r($_SESSION);
+          echo '<br/>POST = <br/>';
+          print_r($_POST); */
         /*
           $test = array(x,'y',z);
           $test1 = array();
@@ -133,9 +133,27 @@ if ($_SESSION['status'] != "KEY") {
                                     <td><input type='checkbox' class='case'/></td>
                                     <td><span id='snum'>1.</span></td>
                                     <td><input class="form-control" type='text' id='zdir_1' name='var_zdir[]' required/></td>
-                                    <td><input class="form-control" type='text' id='varDetail_1' name='varDetail[]' maxlength="100" required/></td>
+                                    <!--
+                                        <td><input class="form-control" type='text' id='varDetail_1' name='varDetail[]' maxlength="100" required/></td>
+                                    -->
+
+
+
+                                    <td>
+                                        <select data-placeholder="Choose a Country" class="form-control chosen-select" tabindex="2">
+                                            <option value=""></option>
+                                            <option value="United States">United States</option>
+                                            <option value="United Kingdom">United Kingdom</option>
+                                        </select>
+                                    </td>
+
+
+
                                     <td><input class="form-control" type='text' id='var_slipSuffix_1' name='var_slipSuffix[]' required/> </td>
-                                    <td><input class="form-control" type='number' id='var_qty_1' name='var_qty[]' required/> </td>
+                                    <td><input class="form-control" type='number
+                                    <td>
+                                        <select data-placeholder="Choose a Country" class="chosen-select" tabindex="2">
+                                            <option value=""><' id='var_qty_1' name='var_qty[]' required/> </td>
                                     <td><input class="form-control" type='number' id='var_unitPrice_1' name='var_unitPrice[]' required/> </td>
                                     <td><input class="form-control" type='number' id='var_amount_1' name='var_amount[]' required/> </td>
                                     <td bgcolor="#ffffe6"><input class="form-control" type='text' id='var_lastSuffix_1' name='var_lastSuffix[]' required/></td>

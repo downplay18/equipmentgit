@@ -16,5 +16,16 @@
 <script src="datatables/buttons.html5.min.js" type="text/javascript"></script> <!-- 1.2.2 -->
 <script src="datatables/buttons.print.min.js" type="text/javascript"></script> <!-- 1.2.2 -->
 
- <script src="datatables/buttons.bootstrap.min.js" type="text/javascript"></script> 
+<script src="datatables/buttons.bootstrap.min.js" type="text/javascript"></script> 
 <script src="datatables/buttons.colVis.js" type="text/javascript"></script>
+
+
+
+<!-- Chosen -->
+    <script src="http://harvesthq.github.io/chosen/chosen.jquery.js"></script>
+    <script>
+      $(function() {
+        $('.chosen-select').chosen();
+        $('.chosen-select-deselect').chosen({ allow_single_deselect: true });
+      });
+    </script>
