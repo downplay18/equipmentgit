@@ -87,7 +87,6 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
                     </div>
 
 
-                    <div class="row">
                         <!-- แถว แสดง dropdown กลุ่มงาน+site -->
                         <div class="col-md-12" style="padding: 1.5em">
 

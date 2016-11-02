@@ -29,14 +29,18 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
     unset($_SESSION['lastDiv']);
     unset($_POST['divName']);
     unset($queryMsg);
-    $divSiteQS = "SELECT detail,quantity,suffix,max(add_date) as maxAddDate,add_qty,add_suffix,owner,adder,slip
-        FROM item
-        LEFT JOIN item_add_record
-        ON item.detail = item_add_record.add_detail
-        AND item.owner = item_add_record.adder
-        GROUP BY adder,detail";
-    $tableHeader = array("รายการ", "คงเหลือ","เพิ่มล่าสุด", "เจ้าของ");
-    $tableData = array("detail", "quantity", "suffix","maxAddDate","add_qty","add_suffix", "owner");
+    $divSiteQS = "SELECT item.*,add_date,add_qty,add_suffix,slip
+                    FROM item
+                    LEFT OUTER JOIN
+                    (
+                        SELECT add_detail,add_date,max(add_id) as maxAddID,adder,add_qty,add_suffix,slip 
+                        FROM item_add_record 
+                        GROUP by add_detail,adder
+                    ) AS itemMaxDate
+                ON item.detail = itemMaxDate.add_detail
+                AND item.owner = itemMaxDate.adder";
+    $tableHeader = array("รายการ", "คงเหลือ", "เพิ่มล่าสุด", "เจ้าของ");
+    $tableData = array("detail", "quantity", "suffix", "add_date", "add_qty", "add_suffix", "owner", "slip");
     $qryMsg = "แสดงทั้งหมด";
 } else { //แสดงเฉพาะที่เลือก
     //echo 'SHOW SELECTED';
@@ -165,15 +169,33 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
                                                     </a>
                                                 </td>
                                                 <td nowrap><?= $rowDivSite[$tableData[1]] . ' ' . $rowDivSite[$tableData[2]] ?></td>
-                                                <td align="left"><?= date("d/m/Y",strtotime($rowDivSite[$tableData[3]]))." <p class='label label-success'>+ ". $rowDivSite[$tableData[4]]." ".$rowDivSite[$tableData[5]]."</p>" ?></td>
+                                                
+                                                <!-- ถ้าไม่ได้อัปโหลด slip (index7=="") ไม่ต้องแสดงปุ่ม  -->
+                                                <?php if($rowDivSite[$tableData[7]] !="") { ?>
+                                                <td align="left"><?=
+                                                    date("d/m/Y", strtotime($rowDivSite[$tableData[3]]))
+                                                    . " <p class='label label-info'>+ " . $rowDivSite[$tableData[4]] . " " . $rowDivSite[$tableData[5]] . "</p>"
+                                                    . " <a href='" . $root_url . "/" . $rowDivSite[$tableData[7]] . "' class='label label-success' target='_blank'><span class='glyphicon glyphicon-file'></span> ใบเสร็จ</a>"
+                                                    ?>
+                                                </td>
+                                                <?php } else { ?>
+                                                <td align="left"><?=
+                                                    date("d/m/Y", strtotime($rowDivSite[$tableData[3]]))
+                                                    . " <p class='label label-info'>+ " . $rowDivSite[$tableData[4]] . " " . $rowDivSite[$tableData[5]] . "</p>"
+                                                    . " <a href='add_record_edit.php' class='label label-danger' target='_blank'><span class='glyphicon glyphicon-remove-sign'></span> ไม่พบใบเสร็จ</a>"
+                                                    ?>
+                                                </td>
+                                                <?php } ?>
+                                                
+                                                
                                                 <td><?= $rowDivSite[$tableData[6]] ?></td>
                                             </tr>
-                                        <?php } ?>
+    <?php } ?>
 
                                     </tbody>
                                 </table>
                             </div> <!-- /.col-md-12 -->
-                        <?php } ?>
+<?php } ?>
 
 
 
@@ -195,7 +217,7 @@ if ($_POST['divName'] == "-- แยกตามกลุ่มงาน --" || e
 
 
 
-            <?php include 'main_script.php'; ?>
+<?php include 'main_script.php'; ?>
 
             <script>
                 $(document).ready(function () {

@@ -81,10 +81,15 @@ if ($_POST['newKeyItem'] != "") {
                                 ?>
                                 <table id="example" class="display table table-bordered table-condensed table-striped table-hover">
                                     <col width="10%">
+                                    <col width="%">
+                                    <col width="%">
+                                    <col width="1%">
                                     <thead>
                                         <tr align="center">
                                             <th>ID</th>
                                             <th>รายการ</th>
+                                            <th>หน่วย</th>
+                                            <th>แก้ไข</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -95,6 +100,8 @@ if ($_POST['newKeyItem'] != "") {
                                             <tr align="center">
                                                 <td><?= $rowKeyi['key_id'] ?></td>
                                                 <td><?= $rowKeyi['key_detail'] ?></td>
+                                                <td><?= $rowKeyi['key_suffix'] ?></td>
+                                                <td><a href="key_edit.php" target="_blank"><span class="label label-warning"><span class="glyphicon glyphicon-edit"></span></span></a></td>
                                             </tr>
                                         <?php } ?>
 
@@ -118,7 +125,7 @@ if ($_POST['newKeyItem'] != "") {
                                     }
                                     unset($_POST['newKeyItem']);
                                     ?>
-                                    <input class="form-control" type="text"  name="newKeyItem" placeholder="ชื่อเครื่องมือเครื่องใช้ใหม่ที่ต้องการเพิ่ม" maxlength="100" autocomplete="off"/>
+                                    <input class="form-control" type="text"  name="newKeyItem" placeholder="ชื่อเครื่องมือเครื่องใช้ใหม่ที่ต้องการเพิ่ม" maxlength="100" autocomplete="off" required/>
                                     <div class="form-group" align="center" style="padding: 20px;">
                                         <button id="submitBtn" class="btn btn-lg btn-danger" type="submit">
                                             <span class="glyphicon glyphicon-ok-sign"></span>&nbsp;ตกลง
@@ -128,10 +135,10 @@ if ($_POST['newKeyItem'] != "") {
 
                             </div> <!-- /.alert-warning -->
 
-                                <div class = "alert alert-danger"> 
-                                    <span class = "label label-warning">คำเตือน!</span> โปรดตรวจสอบให้แน่ใจว่าไม่มีรายการซํ้าที่คล้ายกัน ด้วยการเว้น "&nbsp;&nbsp;" 2 ช่อง<br/>
-                                    <span class = "label label-warning">คำเตือน!</span> การเว้นช่องว่าง " " ไม่ควรเว้น 2 ช่อง<br/>
-                                </div> 
+                            <div class = "alert alert-danger"> 
+                                <span class = "label label-warning">คำเตือน!</span> โปรดตรวจสอบให้แน่ใจว่าไม่มีรายการซํ้าที่คล้ายกัน ด้วยการเว้น "&nbsp;&nbsp;" 2 ช่อง<br/>
+                                <span class = "label label-warning">คำเตือน!</span> การเว้นช่องว่าง " " ไม่ควรเว้น 2 ช่อง<br/>
+                            </div> 
 
 
                         </div> <!-- /.col-md-? -->
@@ -149,7 +156,6 @@ if ($_POST['newKeyItem'] != "") {
 
 
         <?php require("main_script.php"); ?>
-        <script src="js/autocWithAddRow_urgent.js" type="text/javascript"></script>
 
         <script> /*PREVENT DOUBLE SUBMIT: ทำให้ปุ่ม submit กดได้ครั้งเดียว ป้องกับปัญหาเนต lag แล้ว user กดเบิ้ล มันจะทำให้ส่งค่า 2 เท่า */
             $(document).ready(function () {
@@ -171,7 +177,18 @@ if ($_POST['newKeyItem'] != "") {
 
         <script>
             $(document).ready(function () {
-                $('#example').DataTable();
+                var table = $('#example').DataTable({
+                    dom:
+                            "<'row'<'col-sm-6'l><'col-sm-6'f>>" +
+                            "<'row'<'col-sm-12'tr>>" +
+                            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    lengthChange: false,
+                    buttons: ['copy', 'excel', 'print', 'colvis']
+                });
+
+
+                table.buttons().container()
+                        .appendTo($('#example_wrapper .col-sm-6:eq(0)'));
             });
         </script>
 

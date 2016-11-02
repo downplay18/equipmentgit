@@ -1,7 +1,6 @@
 
 <script src="js/jquery-1.12.3.js" type="text/javascript"></script>
 <script src="js/bootstrap.min.js"></script>
-<!-- <script src="js/bootstrap-3.3.7/bootstrap.min.js" type="text/javascript"></script> -->
 
 <!-- สำหรับautocomplete ของ add.php -->
 <script src="js/jquery-ui.min.js" type="text/javascript"></script>
@@ -22,10 +21,4 @@
 
 
 <!-- Chosen -->
-    <script src="http://harvesthq.github.io/chosen/chosen.jquery.js"></script>
-    <script>
-      $(function() {
-        $('.chosen-select').chosen();
-        $('.chosen-select-deselect').chosen({ allow_single_deselect: true });
-      });
-    </script>
+<script src="js/chosen.jquery.js" type="text/javascript"></script>
